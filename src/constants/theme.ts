@@ -1,30 +1,57 @@
-export const COLORS = {
-  primary: '#4fdbc8',
-  primaryContainer: '#14b8a6',
-  surface: '#0b1326',
-  surfaceContainerLow: '#131b2e',
-  surfaceContainer: '#171f33',
-  surfaceContainerHigh: '#222a3d',
-  surfaceContainerHighest: '#2d3449',
-  onSurface: '#dae2fd',
-  onSurfaceVariant: '#bbcac6',
-  secondary: '#4edea3',
-  error: '#ffb4ab',
-  outlineVariant: '#3c4947',
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { darkColors } from "./darkTheme";
+import { lightColors } from "./lightTheme";
+import { typeScale } from "./typography";
+import { spacing, radius } from "./spacing";
+
+export type ThemeType = "dark" | "light";
+
+interface ThemeContextType {
+  theme: ThemeType;
+  colors: typeof darkColors;
+  typography: typeof typeScale;
+  spacing: typeof spacing;
+  radius: typeof radius;
+  isDark: boolean;
+  toggleTheme: () => void;
+  setTheme: (theme: ThemeType) => void;
+}
+
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setThemeState] = useState<ThemeType>("dark");
+
+  const colors = theme === "dark" ? darkColors : lightColors;
+  const isDark = theme === "dark";
+
+  const toggleTheme = () => {
+    setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
+  const setTheme = (newTheme: ThemeType) => {
+    setThemeState(newTheme);
+  };
+
+  return (
+    <ThemeContext.Provider
+      value={{
+        theme,
+        colors,
+        typography: typeScale,
+        spacing,
+        radius,
+        isDark,
+        toggleTheme,
+        setTheme,
+      }}
+    >
+      {children}
+    </ThemeContext.Provider>
+  );
 };
 
-export const SPACING = {
-  xs: 4,
-  sm: 8,
-  md: 12,
-  base: 16,
-  lg: 24,
-  xl: 32,
-};
-
-export const RADIUS = {
-  sm: 4,
-  md: 12,
-  xl: 24,
-  full: 9999,
-};
+export * from "./darkTheme";
+export * from "./lightTheme";
+export * from "./typography";
+export * from "./spacing";
