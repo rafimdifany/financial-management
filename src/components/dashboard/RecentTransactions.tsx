@@ -22,7 +22,7 @@ const TransactionItem = ({ item }: { item: TransactionWithCategory }) => {
       />
       <View style={styles.itemContent}>
         <View style={styles.itemHeader}>
-          <Text variant="titleSm" style={{ color: colors.onSurface }} numberOfLines={1}>
+          <Text variant="titleSm" style={{ color: colors.onSurface, flexShrink: 1, marginRight: spacing.sm }} numberOfLines={1}>
             {item.description || item.category_name}
           </Text>
           <Text 
