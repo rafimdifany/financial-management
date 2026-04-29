@@ -13,7 +13,7 @@ export const BalanceCard = () => {
 
   return (
     <Card style={styles.container}>
-      <View style={styles.header}>
+      <View style={[styles.header, { marginBottom: spacing.sm }]}>
         <Text variant="labelMd" style={[styles.label, { color: colors.onSurfaceVariant }]}>
           TOTAL BALANCE
         </Text>
@@ -21,13 +21,13 @@ export const BalanceCard = () => {
       
       <Text 
         variant="headlineLg" 
-        style={[styles.balance, { color: colors.onSurface }]}
+        style={[styles.balance, { color: colors.onSurface, marginBottom: spacing.xl }]}
       >
         {formatCurrency(balance)}
       </Text>
 
       <View style={styles.row}>
-        <View style={styles.statContainer}>
+        <View style={[styles.statContainer, { gap: spacing.sm }]}>
           <View style={[styles.iconWrapper, { backgroundColor: `${colors.secondary}1A` }]}>
             <Ionicons name="arrow-up" size={16} color={colors.secondary} />
           </View>
@@ -39,7 +39,7 @@ export const BalanceCard = () => {
           </View>
         </View>
 
-        <View style={styles.statContainer}>
+        <View style={[styles.statContainer, { gap: spacing.sm }]}>
           <View style={[styles.iconWrapper, { backgroundColor: `${colors.error}1A` }]}>
             <Ionicons name="arrow-down" size={16} color={colors.error} />
           </View>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   header: {
-    marginBottom: 8,
+    // marginBottom moved to inline style
   },
   label: {
     textTransform: "uppercase",
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   balance: {
     fontVariant: ["tabular-nums"],
-    marginBottom: 24,
+    // marginBottom moved to inline style
   },
   row: {
     flexDirection: "row",
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   statContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    // gap moved to inline style
   },
   iconWrapper: {
     width: 32,
