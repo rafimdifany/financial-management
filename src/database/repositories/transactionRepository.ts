@@ -158,4 +158,28 @@ export const transactionRepository = {
     const result = await db.getFirstAsync<{ total: number }>(query, params);
     return result?.total || 0;
   },
+  async getMonthlySummary(): Promise<{ income: number; expense: number; balance: number }> {
+    const db = await getDatabase();
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const currentMonth = `${year}-${month}%`;
+
+    const result = await db.getFirstAsync<{ income: number; expense: number }>(
+      `SELECT 
+        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
+        SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense
+       FROM transactions 
+       WHERE date LIKE ?`,
+      [currentMonth]
+    );
+
+    const income = result?.income || 0;
+    const expense = result?.expense || 0;
+    return {
+      income,
+      expense,
+      balance: income - expense,
+    };
+  },
 };
