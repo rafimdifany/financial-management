@@ -65,12 +65,12 @@ export const SplashScreen = () => {
           ]} 
         />
         
-        <Animated.View style={[styles.logoContainer, logoAnimatedStyle]}>
+        <Animated.View style={[styles.logoContainer, logoAnimatedStyle, { marginBottom: spacing.base }]}>
           <Ionicons name="wallet" size={80} color={colors.primary} />
         </Animated.View>
 
         <Animated.View style={[styles.textContainer, contentAnimatedStyle]}>
-          <Text variant="headlineLg" style={styles.appName}>
+          <Text variant="headlineLg" style={[styles.appName, { marginBottom: spacing.xs }]}>
             FinPro
           </Text>
           <Text 
@@ -96,13 +96,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logoContainer: {
-    marginBottom: 16,
+    // marginBottom moved to inline style using spacing token
   },
   textContainer: {
     alignItems: "center",
   },
   appName: {
-    marginBottom: 4,
+    // marginBottom moved to inline style using spacing token
   },
   tagline: {
     letterSpacing: 1.2,
