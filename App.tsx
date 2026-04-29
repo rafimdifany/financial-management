@@ -14,6 +14,7 @@ import {
 } from "@expo-google-fonts/inter";
 
 import { ThemeProvider } from "./src/constants/theme";
+import { useDatabase } from "./src/hooks/useDatabase";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -27,14 +28,16 @@ export default function App() {
     "Inter-Medium": Inter_500Medium,
   });
 
+  const { isReady: dbReady, error: dbError } = useDatabase();
+
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
+    if (fontsLoaded && (dbReady || dbError)) {
       // This tells the splash screen to hide immediately!
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, dbReady, dbError]);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || (!dbReady && !dbError)) {
     return null;
   }
 
