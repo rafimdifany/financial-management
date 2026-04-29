@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../hooks/useTheme";
 
 interface Props {
-  icon: string;
-  color: string;
+  icon: string | null;
+  color: string | null;
   size?: number;
   style?: ViewStyle;
 }
@@ -16,7 +16,9 @@ export const CategoryIcon: React.FC<Props> = ({
   size = 24,
   style,
 }) => {
-  const { radius } = useTheme();
+  const { radius, colors } = useTheme();
+  const finalColor = color || colors.primary;
+  const finalIcon = icon || "cart";
 
   return (
     <View
@@ -26,15 +28,15 @@ export const CategoryIcon: React.FC<Props> = ({
           width: size * 1.8,
           height: size * 1.8,
           borderRadius: radius.full,
-          backgroundColor: `${color}33`, // 20% opacity for background
+          backgroundColor: `${finalColor}33`, // 20% opacity for background
         },
         style,
       ]}
     >
       <Ionicons 
-        name={icon as any} 
+        name={finalIcon as any} 
         size={size} 
-        color={color} 
+        color={finalColor} 
       />
     </View>
   );
