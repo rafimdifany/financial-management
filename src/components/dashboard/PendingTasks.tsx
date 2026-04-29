@@ -54,8 +54,8 @@ export const PendingTasks = () => {
   }
 
   return (
-    <View style={[styles.container, { paddingHorizontal: spacing.base, marginVertical: spacing.base }]}>
-      <View style={[styles.header, { marginBottom: spacing.base }]}>
+    <View style={styles.container}>
+      <View style={[styles.header, { paddingHorizontal: spacing.xl, marginBottom: spacing.base }]}>
         <Text variant="headlineSm" style={{ color: colors.onSurface }}>Pending Tasks</Text>
         <Pressable onPress={() => navigation.navigate("TasksTab")}>
           <Text variant="labelMd" style={{ color: colors.primary }}>See All</Text>
@@ -63,7 +63,9 @@ export const PendingTasks = () => {
       </View>
 
       {pendingTasks.slice(0, 3).map((item) => (
-        <TaskItem key={item.id} item={item} />
+        <View key={item.id} style={{ paddingHorizontal: spacing.xl }}>
+          <TaskItem item={item} />
+        </View>
       ))}
     </View>
   );

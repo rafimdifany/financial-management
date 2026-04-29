@@ -54,8 +54,8 @@ export const RecentTransactions = () => {
   }
 
   return (
-    <View style={[styles.container, { paddingHorizontal: spacing.base, marginVertical: spacing.base }]}>
-      <View style={[styles.header, { marginBottom: spacing.base }]}>
+    <View style={styles.container}>
+      <View style={[styles.header, { paddingHorizontal: spacing.xl, marginBottom: spacing.base }]}>
         <Text variant="headlineSm" style={{ color: colors.onSurface }}>Recent Transactions</Text>
         <Pressable onPress={() => navigation.navigate("TransactionsTab")}>
           <Text variant="labelMd" style={{ color: colors.primary }}>See All</Text>
@@ -63,7 +63,9 @@ export const RecentTransactions = () => {
       </View>
 
       {recentTransactions.slice(0, 5).map((item) => (
-        <TransactionItem key={item.id} item={item} />
+        <View key={item.id} style={{ paddingHorizontal: spacing.xl }}>
+          <TransactionItem item={item} />
+        </View>
       ))}
     </View>
   );

@@ -68,8 +68,8 @@ export const GoalProgress = () => {
   }
 
   return (
-    <View style={[styles.container, { marginVertical: spacing.base }]}>
-      <Text variant="headlineSm" style={[styles.title, { marginLeft: spacing.base, marginBottom: spacing.base }]}>
+    <View style={styles.container}>
+      <Text variant="headlineSm" style={[styles.title, { marginLeft: spacing.xl, marginBottom: spacing.base }]}>
         Goals
       </Text>
       <FlatList
@@ -78,7 +78,7 @@ export const GoalProgress = () => {
         renderItem={({ item }) => <GoalCard item={item} cardWidth={CARD_WIDTH} />}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: spacing.base }}
+        contentContainerStyle={{ paddingHorizontal: spacing.xl }}
         snapToInterval={CARD_WIDTH + spacing.base}
         decelerationRate="fast"
       />
