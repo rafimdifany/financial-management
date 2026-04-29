@@ -16,8 +16,10 @@ export const budgetRepository = {
 
   async getBudgetWithSpent(period: BudgetPeriod = "monthly"): Promise<BudgetWithSpent[]> {
     const db = await getDatabase();
-    // For simplicity, we'll assume "monthly" means transactions in the current month (YYYY-MM)
-    const currentMonth = new Date().toISOString().substring(0, 7); // '2026-04'
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const currentMonth = `${year}-${month}`;
 
     return await db.getAllAsync<BudgetWithSpent>(
       `SELECT 

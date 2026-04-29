@@ -18,7 +18,7 @@ export const taskRepository = {
   async getPending(): Promise<Task[]> {
     const db = await getDatabase();
     return await db.getAllAsync<Task>(
-      "SELECT * FROM tasks WHERE status IN ('todo', 'in_progress') ORDER BY CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END, due_date ASC"
+      "SELECT * FROM tasks WHERE status IN ('todo', 'in_progress') ORDER BY CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END, due_date IS NULL, due_date ASC"
     );
   },
 
