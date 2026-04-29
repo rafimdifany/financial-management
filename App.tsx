@@ -18,6 +18,7 @@ import { useDatabase } from "./src/hooks/useDatabase";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { RootNavigator } from "./src/navigation/RootNavigator";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -47,12 +48,14 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <View style={styles.container} onLayout={onLayoutRootView}>
-        <StatusBar style="auto" />
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-      </View>
+      <SafeAreaProvider>
+        <View style={styles.container} onLayout={onLayoutRootView}>
+          <StatusBar style="auto" />
+          <NavigationContainer>
+            <RootNavigator />
+          </NavigationContainer>
+        </View>
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }
