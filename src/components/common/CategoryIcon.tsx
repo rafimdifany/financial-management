@@ -26,7 +26,7 @@ export const CategoryIcon: React.FC<Props> = ({
           width: size * 1.8,
           height: size * 1.8,
           borderRadius: radius.full,
-          backgroundColor: `${color}20`, // 12% - 20% opacity for background
+          backgroundColor: `${color}33`, // 20% opacity for background
         },
         style,
       ]}

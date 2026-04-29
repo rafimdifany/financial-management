@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const StatusBadge: React.FC<Props> = ({ status, style }) => {
-  const { colors, radius } = useTheme();
+  const { colors, radius, spacing } = useTheme();
 
   const getStatusStyles = () => {
     switch (status) {
@@ -48,8 +48,8 @@ export const StatusBadge: React.FC<Props> = ({ status, style }) => {
       style={[
         {
           backgroundColor: styles.backgroundColor,
-          paddingHorizontal: 8,
-          paddingVertical: 4,
+          paddingHorizontal: spacing.sm,
+          paddingVertical: spacing.xs,
           borderRadius: radius.md,
           alignSelf: "flex-start",
         },

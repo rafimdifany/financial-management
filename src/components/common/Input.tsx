@@ -38,7 +38,7 @@ export const Input: React.FC<Props> = ({
       backgroundColor: isFocused 
         ? (isDark ? colors.surfaceContainerHigh : colors.surfaceContainerLowest)
         : (isDark ? colors.surfaceContainerLowest : colors.surfaceContainerHigh),
-      borderColor: isFocused ? colors.primary : "transparent",
+      borderColor: isFocused ? `${colors.primary}80` : "transparent",
       borderWidth: 1, // Fallback focus border (allowed per spec §6.4)
     };
   });
