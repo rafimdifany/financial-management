@@ -9,7 +9,7 @@ import { useDashboardStore } from "../../stores/useDashboardStore";
 export const DashboardScreen = () => {
   const { colors, spacing } = useTheme();
   const insets = useSafeAreaInsets();
-  const { fetchAll, refreshSummary, isLoading } = useDashboardStore();
+  const { fetchAll, isLoading } = useDashboardStore();
 
   useEffect(() => {
     fetchAll();

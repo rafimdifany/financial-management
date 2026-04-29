@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle, StyleProp } from "react-native";
 import Animated, { 
   useAnimatedStyle, 
   useSharedValue, 
-  withSpring,
-  withTiming 
+  withSpring
 } from "react-native-reanimated";
 import { useTheme } from "../../hooks/useTheme";
 
@@ -12,7 +11,7 @@ interface Props {
   progress: number; // 0 to 1
   color?: string;
   height?: number;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 export const ProgressBar: React.FC<Props> = ({ 

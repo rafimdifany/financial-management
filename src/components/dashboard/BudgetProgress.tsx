@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Dimensions } from "react-native";
+import { View, StyleSheet, FlatList, useWindowDimensions } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { Text } from "../common/Text";
 import { Surface } from "../common/Surface";
@@ -9,10 +9,9 @@ import { formatCurrency } from "../../utils/formatCurrency";
 import { Ionicons } from "@expo/vector-icons";
 import { BudgetWithSpent } from "../../types/budget";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const CARD_WIDTH = SCREEN_WIDTH * 0.8;
+// Removed static Dimensions calculation
 
-const BudgetCard = ({ item }: { item: BudgetWithSpent }) => {
+const BudgetCard = ({ item, cardWidth }: { item: BudgetWithSpent; cardWidth: number }) => {
   const { colors, spacing, radius } = useTheme();
   
   const progress = item.amount > 0 ? item.spent / item.amount : 0;
@@ -31,15 +30,15 @@ const BudgetCard = ({ item }: { item: BudgetWithSpent }) => {
       style={[
         styles.card, 
         { 
-          width: CARD_WIDTH, 
+          width: cardWidth, 
           marginRight: spacing.base,
           padding: spacing.base,
           borderRadius: radius.lg,
         }
       ]}
     >
-      <View style={styles.cardHeader}>
-        <View style={styles.categoryInfo}>
+      <View style={[styles.cardHeader, { marginBottom: spacing.md }]}>
+        <View style={[styles.categoryInfo, { gap: spacing.md }]}>
           <View style={[styles.iconContainer, { backgroundColor: `${item.category_color || colors.primary}20` }]}>
             <Ionicons 
               name={(item.category_icon as any) || "cart"} 
@@ -59,7 +58,7 @@ const BudgetCard = ({ item }: { item: BudgetWithSpent }) => {
       <ProgressBar 
         progress={progress} 
         color={progressColor} 
-        style={styles.progressBar} 
+        style={[styles.progressBar, { marginBottom: spacing.md }]} 
       />
 
       <View style={styles.cardFooter}>
@@ -76,6 +75,8 @@ const BudgetCard = ({ item }: { item: BudgetWithSpent }) => {
 
 export const BudgetProgress = () => {
   const { spacing } = useTheme();
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const CARD_WIDTH = SCREEN_WIDTH * 0.8;
   const { budgetProgress } = useDashboardStore();
 
   if (budgetProgress.length === 0) {
@@ -83,14 +84,14 @@ export const BudgetProgress = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text variant="headlineSm" style={[styles.title, { marginLeft: spacing.base }]}>
+    <View style={[styles.container, { marginVertical: spacing.base }]}>
+      <Text variant="headlineSm" style={[styles.title, { marginLeft: spacing.base, marginBottom: spacing.base }]}>
         Budget
       </Text>
       <FlatList
         data={budgetProgress}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <BudgetCard item={item} />}
+        renderItem={({ item }) => <BudgetCard item={item} cardWidth={CARD_WIDTH} />}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: spacing.base }}
@@ -103,10 +104,10 @@ export const BudgetProgress = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 16,
+    // marginVertical moved to inline style
   },
   title: {
-    marginBottom: 16,
+    // marginBottom moved to inline style
   },
   card: {
     overflow: "hidden",
@@ -115,12 +116,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    // marginBottom moved to inline style
   },
   categoryInfo: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    // gap moved to inline style
   },
   iconContainer: {
     width: 32,
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   progressBar: {
-    marginBottom: 12,
+    // marginBottom moved to inline style
   },
   cardFooter: {
     flexDirection: "row",
