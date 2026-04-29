@@ -28,16 +28,16 @@ export default function App() {
     "Inter-Medium": Inter_500Medium,
   });
 
-  const { isReady: dbReady } = useDatabase();
+  const { isReady: dbReady, error: dbError } = useDatabase();
 
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded && dbReady) {
+    if (fontsLoaded && (dbReady || dbError)) {
       // This tells the splash screen to hide immediately!
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, dbReady]);
+  }, [fontsLoaded, dbReady, dbError]);
 
-  if (!fontsLoaded || !dbReady) {
+  if (!fontsLoaded || (!dbReady && !dbError)) {
     return null;
   }
 
