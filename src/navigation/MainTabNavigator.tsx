@@ -13,7 +13,7 @@ import { SettingsStack } from "./SettingsStack";
 const Tab = createBottomTabNavigator();
 
 const TabIcon = ({ name, color, focused }: { name: string; color: string; focused: boolean }) => {
-  const { colors } = useTheme();
+  const { colors, spacing } = useTheme();
   
   return (
     <View style={styles.iconContainer}>
@@ -22,7 +22,7 @@ const TabIcon = ({ name, color, focused }: { name: string; color: string; focuse
         <View 
           style={[
             styles.indicator, 
-            { backgroundColor: colors.primary }
+            { backgroundColor: colors.primary, marginTop: spacing.xs }
           ]} 
         />
       )}
@@ -47,7 +47,7 @@ export const MainTabNavigator = () => {
           left: 0,
           right: 0,
           height: 64 + insets.bottom,
-          backgroundColor: Platform.OS === "ios" ? "transparent" : (isDark ? "rgba(11, 19, 38, 0.9)" : "rgba(248, 250, 252, 0.9)"),
+          backgroundColor: Platform.OS === "ios" ? "transparent" : `${colors.surface}E6`,
           borderTopWidth: 0,
           elevation: 0,
         },
@@ -112,6 +112,6 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    marginTop: 4,
+    // marginTop moved to inline style using spacing token
   },
 });
