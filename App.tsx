@@ -16,6 +16,9 @@ import {
 import { ThemeProvider } from "./src/constants/theme";
 import { useDatabase } from "./src/hooks/useDatabase";
 
+import { NavigationContainer } from "@react-navigation/native";
+import { RootNavigator } from "./src/navigation/RootNavigator";
+
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
@@ -33,6 +36,7 @@ export default function App() {
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded && (dbReady || dbError)) {
       // This tells the splash screen to hide immediately!
+      // We do this when the RootNavigator/SplashScreen is ready to be rendered
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded, dbReady, dbError]);
@@ -45,7 +49,9 @@ export default function App() {
     <ThemeProvider>
       <View style={styles.container} onLayout={onLayoutRootView}>
         <StatusBar style="auto" />
-        {/* Navigation and other components will go here */}
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
       </View>
     </ThemeProvider>
   );
