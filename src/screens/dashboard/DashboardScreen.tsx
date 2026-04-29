@@ -4,6 +4,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../hooks/useTheme";
 import { BalanceCard } from "../../components/dashboard/BalanceCard";
 import { BudgetProgress } from "../../components/dashboard/BudgetProgress";
+import { GoalProgress } from "../../components/dashboard/GoalProgress";
+import { RecentTransactions } from "../../components/dashboard/RecentTransactions";
+import { PendingTasks } from "../../components/dashboard/PendingTasks";
 import { useDashboardStore } from "../../stores/useDashboardStore";
 
 export const DashboardScreen = () => {
@@ -40,8 +43,11 @@ export const DashboardScreen = () => {
       </View>
       
       <BudgetProgress />
+      <GoalProgress />
+      <RecentTransactions />
+      <PendingTasks />
       
-      {/* Add other sections here as they are implemented (Recent Transactions, Tasks, etc.) */}
+      <View style={{ height: 24 }} />
     </ScrollView>
   );
 };
