@@ -1,23 +1,25 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, SectionList, RefreshControl, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { useTransactionStore } from '../../stores/useTransactionStore';
 import { Text } from '../../components/common/Text';
-import { Card } from '../../components/common/Card';
-import { CategoryIcon } from '../../components/common/CategoryIcon';
 import { EmptyState } from '../../components/common/EmptyState';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
-import { format, isToday, isYesterday, parseISO } from 'date-fns';
 import { TransactionWithCategory } from '../../types/transaction';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { groupByDate } from '../../utils/groupByDate';
+import { TransactionItem } from '../../components/transaction/TransactionItem';
+import { TransactionSummary } from '../../components/transaction/TransactionSummary';
+import { TransactionGroupHeader } from '../../components/transaction/TransactionGroup';
 
 export const TransactionListScreen = () => {
   const { colors, spacing } = useTheme();
   const navigation = useNavigation<any>();
   const { 
     transactions, 
+    summary,
     isLoading, 
     isRefreshing, 
     filter, 
@@ -35,35 +37,17 @@ export const TransactionListScreen = () => {
     fetchTransactions();
   }, []);
 
-  const groupedTransactions = useMemo(() => {
-    const groups: { [key: string]: TransactionWithCategory[] } = {};
-    
-    transactions.forEach(tx => {
-      const date = parseISO(tx.date);
-      let title = format(date, 'dd MMM yyyy');
-      
-      if (isToday(date)) title = 'Hari Ini';
-      else if (isYesterday(date)) title = 'Kemarin';
-      
-      if (!groups[title]) groups[title] = [];
-      groups[title].push(tx);
-    });
-    
-    return Object.keys(groups).map(title => ({
-      title,
-      data: groups[title]
-    }));
-  }, [transactions]);
+  const groupedTransactions = groupByDate(transactions);
 
   const handleRefresh = useCallback(() => {
     fetchTransactions(true);
-  }, []);
+  }, [fetchTransactions]);
 
   const handleLoadMore = useCallback(() => {
     if (hasMore && !isLoading) {
       loadMore();
     }
-  }, [hasMore, isLoading]);
+  }, [hasMore, isLoading, loadMore]);
 
   const handleDeletePress = (tx: TransactionWithCategory) => {
     setSelectedTx(tx);
@@ -78,62 +62,16 @@ export const TransactionListScreen = () => {
     }
   };
 
-  const renderRightActions = (tx: TransactionWithCategory) => (
-    <TouchableOpacity 
-      style={[styles.deleteAction, { backgroundColor: colors.error, marginBottom: spacing.base }]}
-      onPress={() => handleDeletePress(tx)}
-    >
-      <MaterialCommunityIcons name="delete" size={24} color={colors.onError} />
-    </TouchableOpacity>
-  );
-
   const renderItem = ({ item }: { item: TransactionWithCategory }) => (
-    <Swipeable
-      renderRightActions={() => renderRightActions(item)}
-      friction={2}
-      rightThreshold={40}
-    >
-      <TouchableOpacity 
-        activeOpacity={0.7}
-        onPress={() => navigation.navigate('TransactionForm', { id: item.id })}
-        style={{ marginBottom: spacing.base }}
-      >
-        <Card level={1} style={styles.transactionCard}>
-          <View style={styles.txRow}>
-            <CategoryIcon 
-              name={item.category_icon || 'cash'} 
-              color={item.category_color || colors.primary} 
-              size={40}
-            />
-            <View style={styles.txInfo}>
-              <Text variant="titleMd">{item.category_name || 'Tanpa Kategori'}</Text>
-              {item.description ? (
-                <Text variant="bodySm" style={{ color: colors.onSurfaceVariant }} numberOfLines={1}>
-                  {item.description}
-                </Text>
-              ) : null}
-            </View>
-            <View style={styles.txAmount}>
-              <Text 
-                variant="titleMd" 
-                style={{ color: item.type === 'income' ? colors.primary : colors.error }}
-              >
-                {item.type === 'income' ? '+' : '-'} Rp {item.amount.toLocaleString('id-ID')}
-              </Text>
-              <Text variant="bodySm" style={{ color: colors.onSurfaceVariant }}>
-                {format(parseISO(item.date), 'HH:mm')}
-              </Text>
-            </View>
-          </View>
-        </Card>
-      </TouchableOpacity>
-    </Swipeable>
+    <TransactionItem 
+      transaction={item}
+      onPress={() => navigation.navigate('TransactionForm', { transaction: item, mode: 'edit' })}
+      onDelete={() => handleDeletePress(item)}
+    />
   );
 
   const renderSectionHeader = ({ section: { title } }: { section: { title: string } }) => (
-    <View style={[styles.sectionHeader, { backgroundColor: colors.surface }]}>
-      <Text variant="titleSm" style={{ color: colors.onSurfaceVariant }}>{title.toUpperCase()}</Text>
-    </View>
+    <TransactionGroupHeader title={title} />
   );
 
   const FilterChip = ({ label, value }: { label: string, value: typeof filter }) => {
@@ -144,12 +82,12 @@ export const TransactionListScreen = () => {
         style={[
           styles.filterChip, 
           { 
-            backgroundColor: isActive ? colors.primary : colors.surfaceVariant,
+            backgroundColor: isActive ? colors.primary : colors.surfaceContainerHigh,
           }
         ]}
       >
         <Text 
-          variant="labelLarge" 
+          variant="labelLg" 
           style={{ color: isActive ? colors.onPrimary : colors.onSurfaceVariant }}
         >
           {label}
@@ -161,12 +99,6 @@ export const TransactionListScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: colors.surface }]}>
-        <View style={[styles.filterContainer, { paddingHorizontal: spacing.lg, paddingBottom: spacing.sm }]}>
-          <FilterChip label="Semua" value="all" />
-          <FilterChip label="Pemasukan" value="income" />
-          <FilterChip label="Pengeluaran" value="expense" />
-        </View>
-
         <SectionList
           sections={groupedTransactions}
           keyExtractor={(item) => item.id.toString()}
@@ -176,15 +108,30 @@ export const TransactionListScreen = () => {
           contentContainerStyle={[styles.listContent, { paddingHorizontal: spacing.lg }]}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
+          ListHeaderComponent={
+            <View style={{ paddingTop: spacing.md }}>
+              <TransactionSummary income={summary.income} expense={summary.expense} />
+              <View style={styles.filterContainer}>
+                <FilterChip label="Semua" value="all" />
+                <FilterChip label="Pemasukan" value="income" />
+                <FilterChip label="Pengeluaran" value="expense" />
+              </View>
+            </View>
+          }
           refreshControl={
-            <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} colors={[colors.primary]} />
+            <RefreshControl 
+              refreshing={isRefreshing} 
+              onRefresh={handleRefresh} 
+              colors={[colors.primary]} 
+              tintColor={colors.primary}
+            />
           }
           ListEmptyComponent={
             !isLoading ? (
               <EmptyState 
                 title="Belum ada transaksi" 
                 message="Mulai catat pengeluaran dan pemasukanmu hari ini."
-                icon="swap-vertical"
+                icon="swap-vertical-outline"
               />
             ) : null
           }
@@ -192,7 +139,7 @@ export const TransactionListScreen = () => {
 
         <TouchableOpacity 
           style={[styles.fab, { backgroundColor: colors.primary, bottom: spacing.xl, right: spacing.xl }]}
-          onPress={() => navigation.navigate('TransactionForm')}
+          onPress={() => navigation.navigate('TransactionForm', { mode: 'create' })}
         >
           <MaterialCommunityIcons name="plus" size={24} color={colors.onPrimary} />
         </TouchableOpacity>
@@ -218,7 +165,7 @@ const styles = StyleSheet.create({
   filterContainer: {
     flexDirection: 'row',
     gap: 8,
-    paddingTop: 8,
+    marginBottom: 8,
   },
   filterChip: {
     paddingHorizontal: 16,
@@ -227,30 +174,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 100,
-  },
-  sectionHeader: {
-    paddingVertical: 12,
-  },
-  transactionCard: {
-    padding: 16,
-  },
-  txRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  txInfo: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  txAmount: {
-    alignItems: 'flex-end',
-  },
-  deleteAction: {
-    width: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 12,
-    marginLeft: 8,
   },
   fab: {
     position: 'absolute',
