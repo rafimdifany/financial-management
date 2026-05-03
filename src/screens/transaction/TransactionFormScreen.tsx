@@ -9,7 +9,8 @@ export const TransactionFormScreen = () => {
   const { colors, spacing } = useTheme();
   const navigation = useNavigation();
   const route = useRoute<any>();
-  const id = route.params?.id;
+  const mode = route.params?.mode || 'create';
+  const transaction = route.params?.transaction;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
@@ -18,7 +19,7 @@ export const TransactionFormScreen = () => {
           <MaterialCommunityIcons name="close" size={28} color={colors.onSurface} />
         </TouchableOpacity>
         <Text variant="headlineSm" style={styles.headerTitle}>
-          {id ? 'Ubah Transaksi' : 'Tambah Transaksi'}
+          {mode === 'edit' ? 'Ubah Transaksi' : 'Tambah Transaksi'}
         </Text>
         <View style={{ width: 28 }} />
       </View>
