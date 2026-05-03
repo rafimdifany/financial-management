@@ -1,5 +1,5 @@
-export type TaskStatus = "todo" | "in_progress" | "done";
-export type TaskPriority = "low" | "medium" | "high";
+export type TaskStatus = 'todo' | 'in_progress' | 'done';
+export type TaskPriority = 'low' | 'medium' | 'high';
 
 export interface Task {
   id: number;
@@ -12,5 +12,18 @@ export interface Task {
   updated_at: string;
 }
 
-export type CreateTask = Omit<Task, "id" | "created_at" | "updated_at" | "status">;
-export type UpdateTask = Partial<Omit<Task, "id" | "created_at">>;
+export interface CreateTask {
+  title: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  due_date?: string;
+}
+
+export interface UpdateTask {
+  title?: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  due_date?: string;
+}
