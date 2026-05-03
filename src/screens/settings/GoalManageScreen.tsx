@@ -58,7 +58,7 @@ export const GoalManageScreen = () => {
   };
 
   const renderGoalItem = ({ item }: { item: Goal }) => {
-    const progress = Math.min(item.current_amount / item.target_amount, 1);
+    const progress = item.target_amount > 0 ? Math.min(item.current_amount / item.target_amount, 1) : 0;
     const percentage = Math.round(progress * 100);
 
     return (

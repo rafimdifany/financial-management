@@ -35,8 +35,8 @@ export const GoalEditor = ({ goal, onSave, onClose }: GoalEditorProps) => {
     try {
       const data = {
         name,
-        target_amount: parseFloat(targetAmount),
-        current_amount: parseFloat(currentAmount),
+        target_amount: parseFloat(targetAmount) || 0,
+        current_amount: parseFloat(currentAmount) || 0,
         icon,
         color,
         deadline: deadline?.toISOString() || null,
