@@ -42,15 +42,16 @@ export const transactionRepository = {
     );
   },
 
-  async getByType(type: TransactionType): Promise<TransactionWithCategory[]> {
+  async getByType(type: TransactionType, limit: number = 20, offset: number = 0): Promise<TransactionWithCategory[]> {
     const db = await getDatabase();
     return await db.getAllAsync<TransactionWithCategory>(
       `SELECT t.*, c.name as category_name, c.icon as category_icon, c.color as category_color 
        FROM transactions t 
        LEFT JOIN categories c ON t.category_id = c.id 
        WHERE t.type = ? 
-       ORDER BY t.date DESC`,
-      [type]
+       ORDER BY t.date DESC, t.id DESC 
+       LIMIT ? OFFSET ?`,
+      [type, limit, offset]
     );
   },
 
