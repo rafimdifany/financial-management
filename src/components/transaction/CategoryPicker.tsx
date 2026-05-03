@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -16,7 +16,7 @@ import { Category } from '../../types/category';
 import Animated, { 
   FadeIn, 
   FadeOut, 
-  SlideInDown, 
+  SlideInUp, 
   SlideOutDown 
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -105,7 +105,7 @@ export const CategoryPicker: React.FC<Props> = ({
         >
           <TouchableWithoutFeedback>
             <Animated.View 
-              entering={SlideInDown}
+              entering={SlideInUp}
               exiting={SlideOutDown}
               style={[
                 styles.content, 
