@@ -22,3 +22,13 @@ export const typeScale = {
   labelMd: { fontSize: 12, fontFamily: fontFamilies.label, letterSpacing: 0.1 * 12 },
   labelSm: { fontSize: 11, fontFamily: fontFamilies.label, letterSpacing: 0.1 * 11 },
 };
+
+export const Typography = {
+  fontFamily: {
+    regular: fontFamilies.body,
+    medium: fontFamilies.title,
+    semiBold: fontFamilies.headline,
+    bold: fontFamilies.display,
+  },
+  typeScale,
+};
