@@ -21,6 +21,7 @@ interface TransactionState {
   addTransaction: (tx: CreateTransaction) => Promise<void>;
   updateTransaction: (id: number, tx: UpdateTransaction) => Promise<void>;
   deleteTransaction: (id: number) => Promise<void>;
+  reset: () => void;
 }
 
 const PAGE_SIZE = 20;
@@ -133,5 +134,17 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  reset: () => {
+    set({
+      transactions: [],
+      isLoading: false,
+      isRefreshing: false,
+      filter: 'all',
+      searchQuery: '',
+      page: 1,
+      hasMore: true,
+    });
   },
 }));

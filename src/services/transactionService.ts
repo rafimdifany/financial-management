@@ -21,7 +21,6 @@ export const transactionService = {
     if (data.amount <= 0) {
       throw new Error('Amount must be greater than 0');
     }
-    // Any other business validation
     return await transactionRepository.create(data);
   },
 
@@ -39,5 +38,9 @@ export const transactionService = {
   async getTransactionCount(type?: 'all' | 'income' | 'expense') {
     const repoType = type === 'all' ? undefined : (type as TransactionType);
     return await transactionRepository.count(repoType);
+  },
+
+  async getMonthlySummary() {
+    return await transactionRepository.getMonthlySummary();
   }
 };
