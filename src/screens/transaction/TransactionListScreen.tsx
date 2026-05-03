@@ -14,10 +14,10 @@ import { groupByDate } from '../../utils/groupByDate';
 import { TransactionItem } from '../../components/transaction/TransactionItem';
 import { TransactionSummary } from '../../components/transaction/TransactionSummary';
 import { TransactionGroupHeader } from '../../components/transaction/TransactionGroup';
-import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export const TransactionListScreen = () => {
-  const { colors, spacing, radius } = useTheme();
+  const { colors, spacing } = useTheme();
   const navigation = useNavigation<any>();
   const { 
     transactions, 
@@ -42,6 +42,9 @@ export const TransactionListScreen = () => {
 
   useEffect(() => {
     fetchTransactions();
+    return () => {
+      if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    };
   }, []);
 
   const groupedTransactions = groupByDate(transactions);
@@ -120,7 +123,7 @@ export const TransactionListScreen = () => {
   };
 
   const ListFooter = () => {
-    if (!hasMore || isLoading) return null;
+    if (!hasMore && !isLoading) return null;
     return (
       <View style={styles.footer}>
         <ActivityIndicator color={colors.primary} />
