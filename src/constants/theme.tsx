@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, ReactNode } from "react";
 import { darkColors } from "./darkTheme";
 import { lightColors } from "./lightTheme";
 import { typeScale } from "./typography";
 import { spacing, radius } from "./spacing";
+import { useSettingsStore } from "../stores/useSettingsStore";
+import { useColorScheme } from "react-native";
 
 export type ThemeType = "dark" | "light";
 
@@ -20,17 +22,27 @@ interface ThemeContextType {
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setThemeState] = useState<ThemeType>("dark");
+  const { theme: storeTheme, updateSetting, fetchSettings } = useSettingsStore();
+  const systemColorScheme = useColorScheme();
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const theme: ThemeType = storeTheme === 'system' 
+    ? (systemColorScheme || 'dark') 
+    : (storeTheme as ThemeType);
 
   const colors = theme === "dark" ? darkColors : lightColors;
   const isDark = theme === "dark";
 
-  const toggleTheme = () => {
-    setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
+  const toggleTheme = async () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    await updateSetting('theme', newTheme);
   };
 
-  const setTheme = (newTheme: ThemeType) => {
-    setThemeState(newTheme);
+  const setTheme = async (newTheme: ThemeType) => {
+    await updateSetting('theme', newTheme);
   };
 
   return (
