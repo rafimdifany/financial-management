@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, Animated as RNAnimated } from 'react-native';
 import { Swipeable, RectButton } from 'react-native-gesture-handler';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../hooks/useTheme';
 import { Task } from '../../types/task';
 import { Typography } from '../../constants/typography';
 import { StatusBadge } from './StatusBadge';

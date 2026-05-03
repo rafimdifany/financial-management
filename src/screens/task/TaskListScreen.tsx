@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../hooks/useTheme';
 import { useTaskStore } from '../../stores/useTaskStore';
 import { TaskItem } from '../../components/task/TaskItem';
 import { Typography } from '../../constants/typography';
@@ -168,6 +168,7 @@ export const TaskListScreen = () => {
         message="Apakah Anda yakin ingin menghapus tugas ini?"
         onConfirm={confirmDelete}
         onCancel={() => setDeleteModalVisible(false)}
+        isDestructive={true}
       />
     </View>
   );
