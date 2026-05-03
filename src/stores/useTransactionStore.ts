@@ -51,8 +51,12 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       let data: TransactionWithCategory[] = [];
       
       if (searchQuery.trim()) {
-        data = await transactionService.searchTransactions(searchQuery);
-        set({ transactions: data, page: 1, hasMore: false });
+        data = await transactionService.searchTransactions(searchQuery, 1, PAGE_SIZE);
+        set({ 
+          transactions: data, 
+          page: 1, 
+          hasMore: data.length === PAGE_SIZE 
+        });
       } else {
         data = await transactionService.getTransactions(filter, 1, PAGE_SIZE);
         set({ 
@@ -83,12 +87,18 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   loadMore: async () => {
     const { filter, page, hasMore, isLoading, transactions, searchQuery } = get();
     
-    if (isLoading || !hasMore || searchQuery.trim()) return;
+    if (isLoading || !hasMore) return;
 
     set({ isLoading: true });
     try {
       const nextPage = page + 1;
-      const newData = await transactionService.getTransactions(filter, nextPage, PAGE_SIZE);
+      let newData: TransactionWithCategory[] = [];
+      
+      if (searchQuery.trim()) {
+        newData = await transactionService.searchTransactions(searchQuery, nextPage, PAGE_SIZE);
+      } else {
+        newData = await transactionService.getTransactions(filter, nextPage, PAGE_SIZE);
+      }
       
       set({
         transactions: [...transactions, ...newData],
@@ -108,7 +118,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   },
 
   setSearchQuery: (searchQuery) => {
-    set({ searchQuery, page: 1, hasMore: !searchQuery.trim() });
+    set({ searchQuery, page: 1 });
     get().fetchTransactions();
   },
 

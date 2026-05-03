@@ -12,9 +12,10 @@ export const transactionService = {
     }
   },
 
-  async searchTransactions(query: string) {
+  async searchTransactions(query: string, page: number = 1, pageSize = 20) {
     if (!query.trim()) return [];
-    return await transactionRepository.search(query);
+    const offset = (page - 1) * pageSize;
+    return await transactionRepository.search(query, pageSize, offset);
   },
 
   async createTransaction(data: CreateTransaction) {
