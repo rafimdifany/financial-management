@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -71,6 +71,8 @@ export const TransactionFormScreen = () => {
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!amount) newErrors.amount = 'Jumlah harus diisi';
+    else if (parseInt(amount.replace(/[^0-9]/g, '')) <= 0)
+      newErrors.amount = 'Jumlah harus lebih dari 0';
     if (!category) newErrors.category = 'Kategori harus dipilih';
     
     setErrors(newErrors);
@@ -205,13 +207,13 @@ export const TransactionFormScreen = () => {
           placeholder="Tambahkan catatan (opsional)"
           multiline
           numberOfLines={3}
+          maxLength={200}
         />
 
         <View style={{ marginTop: spacing.xl }}>
           <Button 
             title="Simpan Transaksi" 
             onPress={handleSave} 
-            size="lg"
           />
           
           {mode === 'edit' && (
