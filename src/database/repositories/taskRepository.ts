@@ -16,6 +16,13 @@ export const taskRepository = {
     return await db.getAllAsync<Task>(query, params);
   },
 
+  async getPending(): Promise<Task[]> {
+    const db = await getDatabase();
+    return await db.getAllAsync<Task>(
+      "SELECT * FROM tasks WHERE status IN ('todo', 'in_progress') ORDER BY CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END, due_date IS NULL, due_date ASC"
+    );
+  },
+
   async getById(id: number): Promise<Task | null> {
     const db = await getDatabase();
     return await db.getFirstAsync<Task>("SELECT * FROM tasks WHERE id = ?", [id]);
