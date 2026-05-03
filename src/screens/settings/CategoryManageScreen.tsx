@@ -84,13 +84,15 @@ export const CategoryManageScreen = () => {
       </View>
       
       <View style={styles.categoryActions}>
-        <TouchableOpacity onPress={() => handleEdit(item)} style={styles.actionButton}>
-          <Ionicons name="pencil-outline" size={20} color={colors.primary} />
-        </TouchableOpacity>
         {!item.is_default && (
-          <TouchableOpacity onPress={() => handleDeletePress(item)} style={styles.actionButton}>
-            <Ionicons name="trash-outline" size={20} color={colors.error} />
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity onPress={() => handleEdit(item)} style={styles.actionButton}>
+              <Ionicons name="pencil-outline" size={20} color={colors.primary} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleDeletePress(item)} style={styles.actionButton}>
+              <Ionicons name="trash-outline" size={20} color={colors.error} />
+            </TouchableOpacity>
+          </>
         )}
       </View>
     </View>
@@ -167,7 +169,7 @@ export const CategoryManageScreen = () => {
       <ConfirmModal
         visible={deleteModalVisible}
         title="Hapus Kategori"
-        message={`Apakah Anda yakin ingin menghapus kategori "${categoryToDelete?.name}"?`}
+        message={`Apakah Anda yakin ingin menghapus kategori "${categoryToDelete?.name}"? Transaksi yang menggunakan kategori ini akan kehilangan label kategorinya.`}
         onConfirm={confirmDelete}
         onCancel={() => setDeleteModalVisible(false)}
         isDestructive={true}

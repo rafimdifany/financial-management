@@ -81,6 +81,28 @@ export const CategoryEditor = ({ category, initialType, onSave, onClose }: Categ
           maxLength={20}
         />
 
+        <Text style={[styles.label, { color: colors.onSurfaceVariant, marginTop: spacing.xl }]}>TIPE</Text>
+        <View style={[styles.typeContainer, { marginTop: spacing.xs }]}>
+          <TouchableOpacity
+            onPress={() => setType('expense')}
+            style={[
+              styles.typeTab,
+              type === 'expense' && { backgroundColor: colors.primary, borderRadius: radius.full }
+            ]}
+          >
+            <Text style={[styles.typeTabText, { color: type === 'expense' ? colors.onPrimary : colors.onSurfaceVariant }]}>Pengeluaran</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setType('income')}
+            style={[
+              styles.typeTab,
+              type === 'income' && { backgroundColor: colors.primary, borderRadius: radius.full }
+            ]}
+          >
+            <Text style={[styles.typeTabText, { color: type === 'income' ? colors.onPrimary : colors.onSurfaceVariant }]}>Pemasukan</Text>
+          </TouchableOpacity>
+        </View>
+
         <Text style={[styles.label, { color: colors.onSurfaceVariant, marginTop: spacing.xl }]}>WARNA</Text>
         <ColorPicker selectedColor={color} onSelect={setColor} />
 
@@ -155,5 +177,21 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     fontFamily: Typography.fontFamily.bold,
+  },
+  typeContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius: 25,
+    padding: 4,
+  },
+  typeTab: {
+    flex: 1,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  typeTabText: {
+    fontSize: 13,
+    fontFamily: Typography.fontFamily.medium,
   },
 });
