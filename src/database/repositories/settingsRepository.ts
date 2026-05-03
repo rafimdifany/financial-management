@@ -1,45 +1,43 @@
-import { getDatabase } from "../database";
-import { Setting, SettingKey } from "../../types/settings";
+import { getDatabase } from '../database';
+import { AppSettings, AppTheme } from '../../types/settings';
 
 export const settingsRepository = {
-  async get(key: SettingKey): Promise<string | null> {
+  async getAll(): Promise<AppSettings> {
     const db = await getDatabase();
-    const result = await db.getFirstAsync<Setting>("SELECT * FROM settings WHERE key = ?", [
-      key,
-    ]);
-    return result?.value || null;
+    const rows = await db.getAllAsync<{ key: string; value: string }>(
+      'SELECT key, value FROM settings'
+    );
+    
+    const settings: Partial<AppSettings> = {};
+    rows.forEach(row => {
+      settings[row.key as keyof AppSettings] = row.value as any;
+    });
+
+    return {
+      theme: (settings.theme as AppTheme) || 'dark',
+      currency: settings.currency || 'IDR',
+      locale: settings.locale || 'id-ID',
+      db_version: settings.db_version || '1',
+    };
   },
 
-  async set(key: SettingKey, value: string): Promise<void> {
+  async update(key: string, value: string): Promise<void> {
     const db = await getDatabase();
-    await db.runAsync("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", [
-      key,
-      value,
-    ]);
+    await db.runAsync(
+      'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+      [key, value]
+    );
   },
 
-  async getAll(): Promise<Setting[]> {
-    const db = await getDatabase();
-    return await db.getAllAsync<Setting>("SELECT * FROM settings");
-  },
-
-  async resetAll(): Promise<void> {
+  async resetAllData(): Promise<void> {
     const db = await getDatabase();
     await db.withTransactionAsync(async () => {
-      await db.runAsync("DELETE FROM settings");
-      await db.runAsync("INSERT INTO settings (key, value) VALUES (?, ?)", ["theme", "dark"]);
-      await db.runAsync("INSERT INTO settings (key, value) VALUES (?, ?)", [
-        "currency",
-        "IDR",
-      ]);
-      await db.runAsync("INSERT INTO settings (key, value) VALUES (?, ?)", [
-        "locale",
-        "id-ID",
-      ]);
-      await db.runAsync("INSERT INTO settings (key, value) VALUES (?, ?)", [
-        "db_version",
-        "1",
-      ]);
+      await db.runAsync('DELETE FROM transactions');
+      await db.runAsync('DELETE FROM tasks');
+      await db.runAsync('DELETE FROM goals');
+      await db.runAsync('DELETE FROM budgets');
+      // We don't delete categories as they are seeded and required
+      // We don't delete settings as they define the app state
     });
-  },
+  }
 };
