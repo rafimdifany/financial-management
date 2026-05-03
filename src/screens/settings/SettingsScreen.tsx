@@ -82,7 +82,7 @@ export const SettingsScreen = () => {
             label="Mata Uang" 
             value={currency} 
             icon="cash-outline"
-            onPress={() => {}} // TODO: Navigate to Currency selection
+            onPress={() => {}} // TODO: Create Currency selection screen
           />
         </>
       ))}
@@ -92,22 +92,22 @@ export const SettingsScreen = () => {
           <SettingRow 
             label="Kategori Transaksi" 
             icon="list-outline"
-            onPress={() => {}} // TODO: Navigate to Category Management
+            onPress={() => navigation.navigate('CategoryManage')}
           />
           <SettingRow 
             label="Kategori Aset" 
             icon="wallet-outline"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('CategoryManage')} // Reuse category manage for now or update as needed
           />
           <SettingRow 
             label="Anggaran Bulanan" 
             icon="pie-chart-outline"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('BudgetManage')}
           />
           <SettingRow 
             label="Target Menabung" 
             icon="trophy-outline"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('GoalManage')}
           />
         </>
       ))}
@@ -117,12 +117,12 @@ export const SettingsScreen = () => {
           <SettingRow 
             label="Ekspor Data (CSV)" 
             icon="download-outline"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('DataManage')}
           />
           <SettingRow 
             label="Impor Data" 
             icon="cloud-upload-outline"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('DataManage')}
           />
           <SettingRow 
             label="Hapus Semua Data" 
