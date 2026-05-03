@@ -10,9 +10,11 @@ interface TransactionState {
   searchQuery: string;
   page: number;
   hasMore: boolean;
+  summary: { income: number; expense: number; balance: number };
   
   // Actions
   fetchTransactions: (refresh?: boolean) => Promise<void>;
+  fetchSummary: () => Promise<void>;
   loadMore: () => Promise<void>;
   setFilter: (filter: 'all' | 'income' | 'expense') => void;
   setSearchQuery: (query: string) => void;
@@ -34,6 +36,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   searchQuery: '',
   page: 1,
   hasMore: true,
+  summary: { income: 0, expense: 0, balance: 0 },
 
   fetchTransactions: async (refresh = false) => {
     const { filter, searchQuery } = get();
@@ -58,10 +61,22 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
           hasMore: data.length === PAGE_SIZE 
         });
       }
+      
+      // Also fetch summary when fetching transactions
+      await get().fetchSummary();
     } catch (error) {
       console.error('Error fetching transactions:', error);
     } finally {
       set({ isLoading: false, isRefreshing: false });
+    }
+  },
+
+  fetchSummary: async () => {
+    try {
+      const summary = await transactionService.getMonthlySummary();
+      set({ summary });
+    } catch (error) {
+      console.error('Error fetching summary:', error);
     }
   },
 
@@ -145,6 +160,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       searchQuery: '',
       page: 1,
       hasMore: true,
+      summary: { income: 0, expense: 0, balance: 0 },
     });
   },
 }));
