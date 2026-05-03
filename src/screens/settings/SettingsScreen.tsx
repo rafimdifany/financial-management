@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Switch, Alert } from 'react-native'
 import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { SettingRow } from '../../components/settings/SettingRow';
+import { ThemeSwitcher } from '../../components/settings/ThemeSwitcher';
 import { Typography } from '../../constants/typography';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
 import { useNavigation } from '@react-navigation/native';
@@ -67,16 +68,9 @@ export const SettingsScreen = () => {
       {renderSection('Tampilan', (
         <>
           <SettingRow 
-            label="Tema Gelap" 
-            icon="moon-outline"
-            rightElement={
-              <Switch 
-                value={theme === 'dark'} 
-                onValueChange={toggleTheme}
-                trackColor={{ false: colors.surfaceContainerHigh, true: colors.primary }}
-                thumbColor={colors.onPrimary}
-              />
-            }
+            label="Tema Aplikasi" 
+            icon="color-palette-outline"
+            rightElement={<ThemeSwitcher />}
           />
           <SettingRow 
             label="Mata Uang" 
