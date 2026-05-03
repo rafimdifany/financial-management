@@ -54,16 +54,6 @@ export const SplashScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
       <View style={styles.centerContent}>
-        {/* Subtle glow behind logo */}
-        <View 
-          style={[
-            styles.glow, 
-            { 
-              backgroundColor: colors.primary,
-              opacity: 0.1,
-            }
-          ]} 
-        />
         
         <Animated.View style={[styles.logoContainer, logoAnimatedStyle, { marginBottom: spacing.base }]}>
           <Ionicons name="wallet" size={80} color={colors.primary} />
@@ -108,12 +98,5 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     textTransform: "uppercase",
     fontSize: 10, // Overriding for a more "architectural" feel per spec
-  },
-  glow: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    // Note: React Native shadow/blur is limited, but we can use this subtle circle
   },
 });
