@@ -88,15 +88,16 @@ export const transactionRepository = {
     return result?.total || 0;
   },
 
-  async search(query: string): Promise<TransactionWithCategory[]> {
+  async search(query: string, limit: number = 20, offset: number = 0): Promise<TransactionWithCategory[]> {
     const db = await getDatabase();
     return await db.getAllAsync<TransactionWithCategory>(
       `SELECT t.*, c.name as category_name, c.icon as category_icon, c.color as category_color 
        FROM transactions t 
        LEFT JOIN categories c ON t.category_id = c.id 
        WHERE t.description LIKE ? 
-       ORDER BY t.date DESC`,
-      [`%${query}%`]
+       ORDER BY t.date DESC, t.id DESC 
+       LIMIT ? OFFSET ?`,
+      [`%${query}%`, limit, offset]
     );
   },
 

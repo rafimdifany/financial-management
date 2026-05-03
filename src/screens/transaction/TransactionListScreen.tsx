@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, View, SectionList, RefreshControl, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { StyleSheet, View, SectionList, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { useTransactionStore } from '../../stores/useTransactionStore';
 import { Text } from '../../components/common/Text';
 import { EmptyState } from '../../components/common/EmptyState';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
+import { Input } from '../../components/common/Input';
 import { TransactionWithCategory } from '../../types/transaction';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,6 +14,7 @@ import { groupByDate } from '../../utils/groupByDate';
 import { TransactionItem } from '../../components/transaction/TransactionItem';
 import { TransactionSummary } from '../../components/transaction/TransactionSummary';
 import { TransactionGroupHeader } from '../../components/transaction/TransactionGroup';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export const TransactionListScreen = () => {
   const { colors, spacing } = useTheme();
@@ -27,14 +29,22 @@ export const TransactionListScreen = () => {
     fetchTransactions, 
     loadMore, 
     hasMore,
-    deleteTransaction 
+    deleteTransaction,
+    setSearchQuery,
+    searchQuery
   } = useTransactionStore();
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedTx, setSelectedTx] = useState<TransactionWithCategory | null>(null);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [localSearch, setLocalSearch] = useState(searchQuery);
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     fetchTransactions();
+    return () => {
+      if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    };
   }, []);
 
   const groupedTransactions = groupByDate(transactions);
@@ -44,10 +54,26 @@ export const TransactionListScreen = () => {
   }, [fetchTransactions]);
 
   const handleLoadMore = useCallback(() => {
-    if (hasMore && !isLoading) {
+    if (hasMore && !isLoading && !isRefreshing) {
       loadMore();
     }
-  }, [hasMore, isLoading, loadMore]);
+  }, [hasMore, isLoading, isRefreshing, loadMore]);
+
+  const handleSearch = (text: string) => {
+    setLocalSearch(text);
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    
+    searchTimeout.current = setTimeout(() => {
+      setSearchQuery(text);
+    }, 300);
+  };
+
+  const toggleSearch = () => {
+    if (isSearchVisible) {
+      handleSearch('');
+    }
+    setIsSearchVisible(!isSearchVisible);
+  };
 
   const handleDeletePress = (tx: TransactionWithCategory) => {
     setSelectedTx(tx);
@@ -96,9 +122,43 @@ export const TransactionListScreen = () => {
     );
   };
 
+  const ListFooter = () => {
+    if (!hasMore && !isLoading) return null;
+    return (
+      <View style={styles.footer}>
+        <ActivityIndicator color={colors.primary} />
+      </View>
+    );
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: colors.surface }]}>
+        {/* Header with Search Toggle */}
+        <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingTop: spacing.xl }]}>
+          {!isSearchVisible ? (
+            <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.headerTitleContainer}>
+              <Text variant="headlineSmall" style={{ color: colors.onSurface }}>Transaksi</Text>
+              <TouchableOpacity onPress={toggleSearch}>
+                <MaterialCommunityIcons name="magnify" size={24} color={colors.onSurface} />
+              </TouchableOpacity>
+            </Animated.View>
+          ) : (
+            <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.searchContainer}>
+              <Input 
+                autoFocus
+                placeholder="Cari transaksi..."
+                value={localSearch}
+                onChangeText={handleSearch}
+                containerStyle={{ flex: 1, marginBottom: 0 }}
+              />
+              <TouchableOpacity onPress={toggleSearch} style={{ marginLeft: spacing.sm }}>
+                <Text variant="labelLg" style={{ color: colors.primary }}>Batal</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          )}
+        </View>
+
         <SectionList
           sections={groupedTransactions}
           keyExtractor={(item) => item.id.toString()}
@@ -118,6 +178,7 @@ export const TransactionListScreen = () => {
               </View>
             </View>
           }
+          ListFooterComponent={ListFooter}
           refreshControl={
             <RefreshControl 
               refreshing={isRefreshing} 
@@ -129,9 +190,9 @@ export const TransactionListScreen = () => {
           ListEmptyComponent={
             !isLoading ? (
               <EmptyState 
-                title="Belum ada transaksi" 
-                message="Mulai catat pengeluaran dan pemasukanmu hari ini."
-                icon="swap-vertical-outline"
+                title={searchQuery ? "Hasil tidak ditemukan" : "Belum ada transaksi"} 
+                message={searchQuery ? `Tidak ada transaksi dengan kata kunci "${searchQuery}"` : "Mulai catat pengeluaran dan pemasukanmu hari ini."}
+                icon={searchQuery ? "search-off" : "swap-vertical-outline"}
               />
             ) : null
           }
@@ -162,10 +223,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  header: {
+    paddingBottom: 16,
+  },
+  headerTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   filterContainer: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 8,
+    marginBottom: 16,
   },
   filterChip: {
     paddingHorizontal: 16,
@@ -174,6 +247,10 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 100,
+  },
+  footer: {
+    paddingVertical: 20,
+    alignItems: 'center',
   },
   fab: {
     position: 'absolute',
