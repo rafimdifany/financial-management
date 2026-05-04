@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { StyleSheet, View, SectionList, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useTransactionStore } from '../../stores/useTransactionStore';
 import { Text } from '../../components/common/Text';
@@ -18,6 +19,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export const TransactionListScreen = () => {
   const { colors, spacing } = useTheme();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { 
     transactions, 
@@ -135,7 +137,14 @@ export const TransactionListScreen = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: colors.surface }]}>
         {/* Header with Search Toggle */}
-        <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingTop: spacing.xl }]}>
+        <View style={[
+          styles.header, 
+          { 
+            paddingHorizontal: spacing.lg, 
+            paddingTop: insets.top + spacing.md,
+            backgroundColor: colors.surface 
+          }
+        ]}>
           {!isSearchVisible ? (
             <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.headerTitleContainer}>
               <Text variant="headlineSmall" style={{ color: colors.onSurface }}>Transaksi</Text>
@@ -165,7 +174,13 @@ export const TransactionListScreen = () => {
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
           stickySectionHeadersEnabled={true}
-          contentContainerStyle={[styles.listContent, { paddingHorizontal: spacing.lg }]}
+          contentContainerStyle={[
+            styles.listContent, 
+            { 
+              paddingHorizontal: spacing.lg,
+              paddingBottom: insets.bottom + 64 + spacing.xl * 2 // 64 is tab bar height
+            }
+          ]}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListHeaderComponent={
@@ -199,7 +214,14 @@ export const TransactionListScreen = () => {
         />
 
         <TouchableOpacity 
-          style={[styles.fab, { backgroundColor: colors.primary, bottom: spacing.xl, right: spacing.xl }]}
+          style={[
+            styles.fab, 
+            { 
+              backgroundColor: colors.primary, 
+              bottom: insets.bottom + 64 + spacing.lg, // Adjust for Tab Bar height
+              right: spacing.lg 
+            }
+          ]}
           onPress={() => navigation.navigate('TransactionForm', { mode: 'create' })}
         >
           <MaterialCommunityIcons name="plus" size={24} color={colors.onPrimary} />
@@ -246,7 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   listContent: {
-    paddingBottom: 100,
+    // Moved paddingBottom to inline style to use insets
   },
   footer: {
     paddingVertical: 20,
@@ -264,5 +286,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    zIndex: 10,
   }
 });
+

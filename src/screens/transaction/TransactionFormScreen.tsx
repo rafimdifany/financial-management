@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text } from '../../components/common/Text';
@@ -24,6 +25,7 @@ import { Category } from '../../types/category';
 
 export const TransactionFormScreen = () => {
   const { colors, spacing, radius } = useTheme();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute<any>();
   const { addTransaction, updateTransaction, deleteTransaction } = useTransactionStore();
@@ -119,7 +121,14 @@ export const TransactionFormScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container, { backgroundColor: colors.surface }]}
     >
-      <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingTop: spacing.xl }]}>
+      <View style={[
+        styles.header, 
+        { 
+          paddingHorizontal: spacing.lg, 
+          paddingTop: insets.top + spacing.md,
+          backgroundColor: colors.surface
+        }
+      ]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialCommunityIcons name="close" size={28} color={colors.onSurface} />
         </TouchableOpacity>
