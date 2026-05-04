@@ -18,14 +18,15 @@ const TabIcon = ({ name, color, focused }: { name: string; color: string; focuse
   return (
     <View style={styles.iconContainer}>
       <Ionicons name={name as any} size={24} color={color} />
-      {focused && (
-        <View
-          style={[
-            styles.indicator,
-            { backgroundColor: colors.primary, marginTop: spacing.xs }
-          ]}
-        />
-      )}
+      <View
+        style={[
+          styles.indicator,
+          { 
+            backgroundColor: focused ? colors.primary : "transparent", 
+            marginTop: spacing.xs 
+          }
+        ]}
+      />
     </View>
   );
 };
