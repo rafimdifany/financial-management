@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useTaskStore } from '../../stores/useTaskStore';
 import { TaskItem } from '../../components/task/TaskItem';
@@ -20,6 +21,7 @@ const FILTER_OPTIONS: { label: string; value: TaskStatus | 'all' }[] = [
 
 export const TaskListScreen = () => {
   const { colors, spacing, radius } = useTheme();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { 
     tasks, 
@@ -107,7 +109,7 @@ export const TaskListScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <View style={[styles.header, { paddingTop: 60, paddingHorizontal: spacing.xl }]}>
+      <View style={[styles.header, { paddingTop: insets.top + spacing.md, paddingHorizontal: spacing.xl }]}>
         <Text style={[styles.title, { color: colors.onSurface }]}>Daftar Tugas</Text>
       </View>
 
@@ -126,7 +128,10 @@ export const TaskListScreen = () => {
         )}
         contentContainerStyle={[
           styles.listContent, 
-          { paddingHorizontal: spacing.xl, paddingBottom: 100 }
+          { 
+            paddingHorizontal: spacing.xl, 
+            paddingBottom: insets.bottom + 64 + spacing.xl * 2 
+          }
         ]}
         ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
         ListEmptyComponent={
@@ -147,7 +152,7 @@ export const TaskListScreen = () => {
           styles.fab,
           {
             backgroundColor: colors.primary,
-            bottom: spacing.xl + 70, // Above bottom nav
+            bottom: insets.bottom + 64 + spacing.lg,
             right: spacing.xl,
             borderRadius: radius.full,
             shadowColor: '#000',
@@ -155,6 +160,7 @@ export const TaskListScreen = () => {
             shadowOpacity: 0.3,
             shadowRadius: 8,
             elevation: 5,
+            zIndex: 10,
           }
         ]}
         onPress={() => navigation.navigate('TaskForm')}

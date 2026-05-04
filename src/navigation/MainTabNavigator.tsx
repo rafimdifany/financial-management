@@ -14,16 +14,16 @@ const Tab = createBottomTabNavigator();
 
 const TabIcon = ({ name, color, focused }: { name: string; color: string; focused: boolean }) => {
   const { colors, spacing } = useTheme();
-  
+
   return (
     <View style={styles.iconContainer}>
       <Ionicons name={name as any} size={24} color={color} />
       {focused && (
-        <View 
+        <View
           style={[
-            styles.indicator, 
+            styles.indicator,
             { backgroundColor: colors.primary, marginTop: spacing.xs }
-          ]} 
+          ]}
         />
       )}
     </View>
@@ -46,7 +46,8 @@ export const MainTabNavigator = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: 64 + insets.bottom,
+          height: 48 + insets.bottom,
+          paddingBottom: insets.bottom,
           backgroundColor: Platform.OS === "ios" ? "transparent" : `${colors.surface}E6`,
           borderTopWidth: 0,
           elevation: 0,
@@ -55,7 +56,7 @@ export const MainTabNavigator = () => {
           Platform.OS === "ios" ? (
             <BlurView
               intensity={80}
-              tint={isDark ? "dark" : "light"}
+              tint={isDark ? "light" : "dark"}
               style={StyleSheet.absoluteFill}
             />
           ) : null
