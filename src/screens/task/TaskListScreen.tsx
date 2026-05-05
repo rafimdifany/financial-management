@@ -113,6 +113,7 @@ export const TaskListScreen = () => {
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id.toString()}
+        contentInsetAdjustmentBehavior="never"
         renderItem={({ item }) => (
           <TaskItem
             task={item}

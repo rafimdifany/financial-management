@@ -56,6 +56,13 @@ const DashboardMetric = ({
 export const DashboardScreen = () => {
   const { colors, spacing } = useTheme();
   const { fetchAll, isLoading, income, expense } = useDashboardStore();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchAll();
+    setIsRefreshing(false);
+  };
 
   const [greeting, setGreeting] = useState("");
   const [currentDate, setCurrentDate] = useState("");
@@ -81,6 +88,7 @@ export const DashboardScreen = () => {
       <AppTopBar />
       <ScrollView 
         style={styles.container}
+        contentInsetAdjustmentBehavior="never"
         contentContainerStyle={[
           styles.content, 
           { paddingBottom: 132 }
@@ -88,12 +96,14 @@ export const DashboardScreen = () => {
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl 
-            refreshing={isLoading} 
-            onRefresh={fetchAll} 
+            refreshing={isRefreshing} 
+            onRefresh={handleRefresh} 
             tintColor={colors.primary}
             colors={[colors.primary]}
           />
         }
+        automaticallyAdjustContentInsets={false}
+        automaticallyAdjustsScrollIndicatorInsets={false}
       >
         <View style={[styles.main, { padding: spacing.xl, gap: spacing["2xl"] }]}>
           <View>
