@@ -163,6 +163,7 @@ export const TransactionListScreen = () => {
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
           stickySectionHeadersEnabled={true}
+          contentInsetAdjustmentBehavior="never"
           contentContainerStyle={[
             styles.listContent, 
             { 

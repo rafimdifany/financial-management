@@ -58,6 +58,7 @@ export const SettingsScreen = () => {
       <AppTopBar />
       <ScrollView 
         style={styles.container}
+        contentInsetAdjustmentBehavior="never"
         contentContainerStyle={{ paddingBottom: 112 }}
       >
         <View style={[styles.profileHeader, { paddingTop: spacing["3xl"], paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }]}>
