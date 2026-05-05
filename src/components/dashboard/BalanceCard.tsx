@@ -46,7 +46,7 @@ export const BalanceCard = () => {
         style={[
           styles.statusPill,
           {
-            backgroundColor: "rgba(255,255,255,0.2)",
+            backgroundColor: "rgba(0, 0, 0, 0.12)",
             borderRadius: radius.md,
           },
         ]}
@@ -84,8 +84,9 @@ const styles = StyleSheet.create({
   statusPill: {
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "flex-start",
     gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
 });
