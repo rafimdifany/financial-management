@@ -20,6 +20,12 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { RootNavigator } from "./src/navigation/RootNavigator";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useTheme } from "./src/hooks/useTheme";
+
+const AppStatusBar = () => {
+  const { isDark } = useTheme();
+  return <StatusBar style={isDark ? "light" : "dark"} />;
+};
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -52,7 +58,7 @@ export default function App() {
       <ThemeProvider>
         <SafeAreaProvider>
           <View style={styles.container} onLayout={onLayoutRootView}>
-            <StatusBar style="auto" />
+            <AppStatusBar />
             <NavigationContainer>
               <RootNavigator />
             </NavigationContainer>
