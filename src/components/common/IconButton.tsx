@@ -50,7 +50,7 @@ export const IconButton: React.FC<Props> = ({
         {
           width: size * 1.8,
           height: size * 1.8,
-          borderRadius: radius.full,
+          borderRadius: radius.md,
           backgroundColor: backgroundColor || colors.surfaceContainerHigh,
         },
         animatedStyle,

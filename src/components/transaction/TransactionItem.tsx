@@ -38,7 +38,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
         onPress={onPress}
         style={{ marginBottom: spacing.base }}
       >
-        <Card level={1} style={styles.card}>
+        <Card level={1} style={[styles.card, { borderRadius: 16 }]}>
           <View style={styles.row}>
             <CategoryIcon 
               icon={transaction.category_icon || 'cash'} 
@@ -46,22 +46,24 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
               size={24}
             />
             <View style={styles.info}>
-              <Text variant="titleMd">{transaction.category_name || 'Tanpa Kategori'}</Text>
+              <Text variant="titleMd" numberOfLines={2}>{transaction.description || transaction.category_name || 'Tanpa Kategori'}</Text>
               {transaction.description ? (
                 <Text variant="bodySm" style={{ color: colors.onSurfaceVariant }} numberOfLines={1}>
-                  {transaction.description}
+                  {transaction.category_name}
                 </Text>
               ) : null}
             </View>
             <View style={styles.amountContainer}>
               <Text 
                 variant="titleMd" 
+                numberOfLines={1}
                 style={[
                   styles.amount,
                   { color: transaction.type === 'income' ? colors.primary : colors.error }
                 ]}
               >
-                {transaction.type === 'income' ? '+' : '-'}Rp {transaction.amount.toLocaleString('id-ID')}
+                {transaction.type === 'income' ? '+ Rp ' : '- Rp '}
+                {transaction.amount.toLocaleString('id-ID')}
               </Text>
               <Text variant="bodySm" style={{ color: colors.onSurfaceVariant }}>
                 {format(parseISO(transaction.date), 'HH:mm')}
@@ -76,7 +78,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
 
 const styles = StyleSheet.create({
   card: {
-    padding: 16,
+    padding: 17,
   },
   row: {
     flexDirection: 'row',
@@ -88,6 +90,7 @@ const styles = StyleSheet.create({
   },
   amountContainer: {
     alignItems: 'flex-end',
+    maxWidth: 104,
   },
   amount: {
     fontVariant: ['tabular-nums'],
@@ -96,7 +99,7 @@ const styles = StyleSheet.create({
     width: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: 8,
     marginLeft: 8,
   },
 });

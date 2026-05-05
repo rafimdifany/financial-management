@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { StyleSheet, View, SectionList, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, SectionList, RefreshControl, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useTransactionStore } from '../../stores/useTransactionStore';
@@ -16,9 +16,12 @@ import { TransactionItem } from '../../components/transaction/TransactionItem';
 import { TransactionSummary } from '../../components/transaction/TransactionSummary';
 import { TransactionGroupHeader } from '../../components/transaction/TransactionGroup';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { AppTopBar } from '../../components/common/AppTopBar';
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 
 export const TransactionListScreen = () => {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { 
@@ -136,23 +139,9 @@ export const TransactionListScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: colors.surface }]}>
-        {/* Header with Search Toggle */}
-        <View style={[
-          styles.header, 
-          { 
-            paddingHorizontal: spacing.lg, 
-            paddingTop: insets.top + spacing.md,
-            backgroundColor: colors.surface 
-          }
-        ]}>
-          {!isSearchVisible ? (
-            <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.headerTitleContainer}>
-              <Text variant="headlineSmall" style={{ color: colors.onSurface }}>Transaksi</Text>
-              <TouchableOpacity onPress={toggleSearch}>
-                <MaterialCommunityIcons name="magnify" size={24} color={colors.onSurface} />
-              </TouchableOpacity>
-            </Animated.View>
-          ) : (
+        <AppTopBar />
+        {isSearchVisible ? (
+          <View style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.base }}>
             <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.searchContainer}>
               <Input 
                 autoFocus
@@ -165,8 +154,8 @@ export const TransactionListScreen = () => {
                 <Text variant="labelLg" style={{ color: colors.primary }}>Batal</Text>
               </TouchableOpacity>
             </Animated.View>
-          )}
-        </View>
+          </View>
+        ) : null}
 
         <SectionList
           sections={groupedTransactions}
@@ -178,15 +167,40 @@ export const TransactionListScreen = () => {
             styles.listContent, 
             { 
               paddingHorizontal: spacing.lg,
-              paddingBottom: insets.bottom + 64 + spacing.xl * 2 // 64 is tab bar height
+              paddingBottom: insets.bottom + 104
             }
           ]}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListHeaderComponent={
-            <View style={{ paddingTop: spacing.md }}>
+            <View style={{ paddingTop: spacing.base }}>
+              <View style={{ marginBottom: spacing.lg }}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <View style={[styles.monthRow, { gap: spacing.sm }]}>
+                    {MONTHS.map((month) => {
+                      const active = month === 'May';
+                      return (
+                        <TouchableOpacity
+                          key={month}
+                          style={[
+                            styles.monthChip,
+                            {
+                              backgroundColor: active ? colors.primary : colors.surfaceVariant,
+                              borderRadius: radius.full,
+                            },
+                          ]}
+                        >
+                          <Text variant="labelLg" style={{ color: active ? colors.onPrimary : colors.onSurfaceVariant }}>
+                            {month}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </ScrollView>
+              </View>
               <TransactionSummary income={summary.income} expense={summary.expense} />
-              <View style={styles.filterContainer}>
+              <View style={[styles.filterContainer, { gap: spacing.sm }]}>
                 <FilterChip label="Semua" value="all" />
                 <FilterChip label="Pemasukan" value="income" />
                 <FilterChip label="Pengeluaran" value="expense" />
@@ -207,7 +221,7 @@ export const TransactionListScreen = () => {
               <EmptyState 
                 title={searchQuery ? "Hasil tidak ditemukan" : "Belum ada transaksi"} 
                 message={searchQuery ? `Tidak ada transaksi dengan kata kunci "${searchQuery}"` : "Mulai catat pengeluaran dan pemasukanmu hari ini."}
-                icon={searchQuery ? "search-off" : "swap-vertical-outline"}
+                icon={searchQuery ? "search-outline" : "swap-vertical-outline"}
               />
             ) : null
           }
@@ -218,7 +232,7 @@ export const TransactionListScreen = () => {
             styles.fab, 
             { 
               backgroundColor: colors.primary, 
-              bottom: insets.bottom + 64 + spacing.lg, // Adjust for Tab Bar height
+              bottom: insets.bottom + 88,
               right: spacing.lg 
             }
           ]}
@@ -246,11 +260,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingBottom: 16,
+    paddingBottom: 12,
   },
   headerTitleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 16,
+  },
+  titleBlock: {
+    flex: 1,
+  },
+  headerIconButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   searchContainer: {
@@ -259,13 +283,12 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     flexDirection: 'row',
-    gap: 8,
     marginBottom: 16,
   },
   filterChip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 12,
   },
   listContent: {
     // Moved paddingBottom to inline style to use insets
@@ -278,7 +301,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 56,
     height: 56,
-    borderRadius: 28,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
@@ -287,6 +310,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     zIndex: 10,
-  }
+  },
+  monthRow: {
+    flexDirection: 'row',
+  },
+  monthChip: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
 });
-

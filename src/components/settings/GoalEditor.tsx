@@ -106,7 +106,7 @@ export const GoalEditor = ({ goal, onSave, onClose }: GoalEditorProps) => {
         <Text style={[styles.label, { color: colors.onSurfaceVariant, marginTop: spacing.xl }]}>DEADLINE (OPSIONAL)</Text>
         <TouchableOpacity 
           onPress={() => setShowDatePicker(true)}
-          style={[styles.input, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.md, padding: spacing.md, marginTop: spacing.xs, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}
+          style={[styles.dateInput, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.md, padding: spacing.md, marginTop: spacing.xs }]}
         >
           <Text style={{ color: deadline ? colors.onSurface : colors.outline }}>
             {deadline ? deadline.toLocaleDateString('id-ID') : 'Pilih Tanggal'}
@@ -139,7 +139,7 @@ export const GoalEditor = ({ goal, onSave, onClose }: GoalEditorProps) => {
         <TouchableOpacity
           onPress={handleSave}
           disabled={isSubmitting}
-          style={[styles.saveButton, { backgroundColor: colors.primary, borderRadius: radius.full, marginTop: spacing.xxl, opacity: isSubmitting ? 0.7 : 1 }]}
+          style={[styles.saveButton, { backgroundColor: colors.primary, borderRadius: radius.md, marginTop: spacing.xxl, opacity: isSubmitting ? 0.7 : 1 }]}
         >
           <Text style={[styles.saveButtonText, { color: colors.onPrimary }]}>
             {isSubmitting ? 'Menyimpan...' : 'Simpan Target'}
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
   previewName: { fontSize: 18, fontFamily: Typography.fontFamily.semiBold },
   label: { fontSize: 12, fontFamily: Typography.fontFamily.medium },
   input: { fontSize: 16, fontFamily: Typography.fontFamily.regular },
+  dateInput: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   saveButton: { height: 56, alignItems: 'center', justifyContent: 'center' },
   saveButtonText: { fontSize: 16, fontFamily: Typography.fontFamily.bold },
 });

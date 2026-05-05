@@ -4,6 +4,7 @@ import { useTheme } from "../../hooks/useTheme";
 import { Text } from "../common/Text";
 import { Surface } from "../common/Surface";
 import { ProgressBar } from "../common/ProgressBar";
+import { SectionHeader } from "../common/SectionHeader";
 import { useDashboardStore } from "../../stores/useDashboardStore";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { Ionicons } from "@expo/vector-icons";
@@ -39,7 +40,7 @@ const BudgetCard = ({ item, cardWidth }: { item: BudgetWithSpent; cardWidth: num
     >
       <View style={[styles.cardHeader, { marginBottom: spacing.md }]}>
         <View style={[styles.categoryInfo, { gap: spacing.md }]}>
-          <View style={[styles.iconContainer, { backgroundColor: `${item.category_color || colors.primary}20` }]}>
+          <View style={[styles.iconContainer, { backgroundColor: `${item.category_color || colors.primary}18`, borderRadius: radius.sm }]}>
             <Ionicons 
               name={(item.category_icon as any) || "cart"} 
               size={18} 
@@ -76,7 +77,7 @@ const BudgetCard = ({ item, cardWidth }: { item: BudgetWithSpent; cardWidth: num
 export const BudgetProgress = () => {
   const { spacing } = useTheme();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const CARD_WIDTH = SCREEN_WIDTH * 0.8;
+  const CARD_WIDTH = Math.min(SCREEN_WIDTH * 0.76, 340);
   const { budgetProgress } = useDashboardStore();
 
   if (budgetProgress.length === 0) {
@@ -85,16 +86,16 @@ export const BudgetProgress = () => {
 
   return (
     <View style={styles.container}>
-      <Text variant="headlineSm" style={[styles.title, { marginLeft: spacing.xl, marginBottom: spacing.base }]}>
-        Budget
-      </Text>
+      <View style={{ marginBottom: spacing.base }}>
+        <SectionHeader title="Budget" caption="Pantau kategori yang mulai mendekati batas." />
+      </View>
       <FlatList
         data={budgetProgress}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <BudgetCard item={item} cardWidth={CARD_WIDTH} />}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: spacing.xl }}
+        contentContainerStyle={{ paddingRight: spacing.xl }}
         snapToInterval={CARD_WIDTH + spacing.base}
         decelerationRate="fast"
       />
@@ -105,9 +106,6 @@ export const BudgetProgress = () => {
 const styles = StyleSheet.create({
   container: {
     // marginVertical moved to inline style
-  },
-  title: {
-    // marginBottom moved to inline style
   },
   card: {
     overflow: "hidden",
@@ -126,7 +124,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 32,
     height: 32,
-    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -11,6 +11,7 @@ interface Props {
 
 export const TransactionSummary: React.FC<Props> = ({ income, expense }) => {
   const { colors, spacing, radius } = useTheme();
+  const net = income - expense;
 
   return (
     <Card 
@@ -19,7 +20,7 @@ export const TransactionSummary: React.FC<Props> = ({ income, expense }) => {
         styles.container, 
         { 
           backgroundColor: colors.surfaceContainerHigh, 
-          borderRadius: radius.xl,
+          borderRadius: radius.md,
           padding: spacing.lg,
           marginBottom: spacing.lg
         }
@@ -28,19 +29,28 @@ export const TransactionSummary: React.FC<Props> = ({ income, expense }) => {
       <View style={styles.row}>
         <View style={styles.column}>
           <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: spacing.xs }}>
-            PEMASUKAN
+            INCOME
           </Text>
-          <Text variant="titleMd" style={{ color: colors.primary }}>
+          <Text variant="titleMd" numberOfLines={1} style={{ color: colors.secondary }}>
             Rp {income.toLocaleString('id-ID')}
           </Text>
         </View>
         <View style={[styles.divider, { backgroundColor: colors.outlineVariant }]} />
         <View style={styles.column}>
           <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: spacing.xs }}>
-            PENGELUARAN
+            EXPENSE
           </Text>
-          <Text variant="titleMd" style={{ color: colors.error }}>
-            -Rp {expense.toLocaleString('id-ID')}
+          <Text variant="titleMd" numberOfLines={1} style={{ color: colors.error }}>
+            Rp {expense.toLocaleString('id-ID')}
+          </Text>
+        </View>
+        <View style={[styles.divider, { backgroundColor: colors.outlineVariant }]} />
+        <View style={styles.column}>
+          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: spacing.xs }}>
+            NET
+          </Text>
+          <Text variant="titleMd" numberOfLines={1} style={{ color: colors.primary }}>
+            Rp {net.toLocaleString('id-ID')}
           </Text>
         </View>
       </View>

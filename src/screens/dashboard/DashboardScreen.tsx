@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { ScrollView, StyleSheet, RefreshControl, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Text } from "../../components/common/Text";
@@ -12,21 +11,61 @@ import { GoalProgress } from "../../components/dashboard/GoalProgress";
 import { RecentTransactions } from "../../components/dashboard/RecentTransactions";
 import { PendingTasks } from "../../components/dashboard/PendingTasks";
 import { useDashboardStore } from "../../stores/useDashboardStore";
+import { Surface } from "../../components/common/Surface";
+import { Ionicons } from "@expo/vector-icons";
+import { AppTopBar } from "../../components/common/AppTopBar";
+import { formatCurrency } from "../../utils/formatCurrency";
+
+const DashboardMetric = ({
+  icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  value: string;
+  tone: string;
+}) => {
+  const { colors, spacing, radius } = useTheme();
+
+  return (
+    <Surface
+      level={1}
+      style={[
+        styles.metric,
+        {
+          padding: spacing.md,
+          borderRadius: radius.md,
+        },
+      ]}
+    >
+      <View style={[styles.metricIcon, { backgroundColor: `${tone}18`, borderRadius: radius.md }]}>
+        <Ionicons name={icon} size={16} color={tone} />
+      </View>
+      <Text variant="labelSm" style={{ color: colors.onSurfaceVariant, textTransform: 'uppercase', fontWeight: '800' }}>
+        {label}
+      </Text>
+      <Text variant="titleLg" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.78} style={{ color: colors.onSurface }}>
+        {value}
+      </Text>
+    </Surface>
+  );
+};
 
 export const DashboardScreen = () => {
   const { colors, spacing } = useTheme();
-  const insets = useSafeAreaInsets();
-  const { fetchAll, isLoading } = useDashboardStore();
+  const { fetchAll, isLoading, income, expense } = useDashboardStore();
 
   const [greeting, setGreeting] = useState("");
   const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) setGreeting("Good Morning");
-    else if (hour >= 12 && hour < 17) setGreeting("Good Afternoon");
-    else if (hour >= 17 && hour < 21) setGreeting("Good Evening");
-    else setGreeting("Good Night");
+    if (hour >= 5 && hour < 12) setGreeting("Selamat pagi");
+    else if (hour >= 12 && hour < 17) setGreeting("Selamat siang");
+    else if (hour >= 17 && hour < 21) setGreeting("Selamat sore");
+    else setGreeting("Selamat malam");
 
     setCurrentDate(format(new Date(), "MMMM yyyy", { locale: id }));
   }, []);
@@ -38,54 +77,56 @@ export const DashboardScreen = () => {
   );
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: colors.surface }]}
-      contentContainerStyle={[
-        styles.content, 
-        { 
-          paddingTop: insets.top + spacing.base,
-          paddingBottom: 100 + insets.bottom, // extra padding for tab bar
+    <View style={[styles.container, { backgroundColor: colors.surface }]}>
+      <AppTopBar />
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={[
+          styles.content, 
+          { paddingBottom: 132 }
+        ]}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl 
+            refreshing={isLoading} 
+            onRefresh={fetchAll} 
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
         }
-      ]}
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl 
-          refreshing={isLoading} 
-          onRefresh={fetchAll} 
-          tintColor={colors.primary}
-          colors={[colors.primary]}
-        />
-      }
-    >
-      <View style={{ paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }}>
-        <Text variant="headlineSm" style={{ color: colors.onSurface }}>{greeting}</Text>
-        <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, textTransform: "uppercase", marginTop: 4 }}>
-          {currentDate}
-        </Text>
-      </View>
+      >
+        <View style={[styles.main, { padding: spacing.xl, gap: spacing["2xl"] }]}>
+          <View>
+            <Text variant="headlineLg" style={{ color: colors.onSurface }}>{greeting}, Rafi</Text>
+            <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant, marginTop: 2 }}>
+              {currentDate}
+            </Text>
+          </View>
 
-      <View style={{ paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }}>
-        <BalanceCard />
-      </View>
-      
-      <View style={{ marginBottom: spacing["3xl"] }}>
-        <BudgetProgress />
-      </View>
+          <BalanceCard />
 
-      <View style={{ marginBottom: spacing["3xl"] }}>
-        <GoalProgress />
-      </View>
+          <View style={[styles.incomeExpenseGrid, { gap: spacing.base }]}>
+            <DashboardMetric
+              icon="arrow-down-outline"
+              label="Income"
+              value={formatCurrency(income)}
+              tone={colors.secondary}
+            />
+            <DashboardMetric
+              icon="arrow-up-outline"
+              label="Expense"
+              value={formatCurrency(expense)}
+              tone={colors.error}
+            />
+          </View>
 
-      <View style={{ marginBottom: spacing["3xl"] }}>
-        <RecentTransactions />
-      </View>
-
-      <View style={{ marginBottom: spacing["3xl"] }}>
-        <PendingTasks />
-      </View>
-      
-      <View style={{ height: 24 }} />
-    </ScrollView>
+          <GoalProgress />
+          <BudgetProgress />
+          <RecentTransactions />
+          <PendingTasks />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -95,5 +136,21 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingBottom: 24,
+  },
+  main: {
+    width: "100%",
+  },
+  incomeExpenseGrid: {
+    flexDirection: "row",
+  },
+  metric: {
+    flex: 1,
+    gap: 8,
+  },
+  metricIcon: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

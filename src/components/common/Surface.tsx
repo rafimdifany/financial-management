@@ -42,6 +42,8 @@ export const Surface: React.FC<Props> = ({
         {
           backgroundColor: getBackgroundColor(),
           borderRadius: radius.md,
+          borderWidth: level === 0 ? 0 : StyleSheet.hairlineWidth,
+          borderColor: colors.outlineVariant,
         },
         style,
       ]}

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../hooks/useTheme";
 import { Text } from "../common/Text";
@@ -8,17 +8,19 @@ import { formatCurrency } from "../../utils/formatCurrency";
 import { formatDate } from "../../utils/formatDate";
 import { CategoryIcon } from "../common/CategoryIcon";
 import { TransactionWithCategory } from "../../types/transaction";
+import { Surface } from "../common/Surface";
+import { SectionHeader } from "../common/SectionHeader";
 
 const TransactionItem = ({ item }: { item: TransactionWithCategory }) => {
   const { colors, spacing } = useTheme();
   const isIncome = item.type === "income";
 
   return (
-    <View style={[styles.item, { marginBottom: spacing.base }]}>
+    <View style={[styles.item, { paddingVertical: spacing.md }]}>
       <CategoryIcon 
         icon={item.category_icon} 
         color={item.category_color} 
-        size={40} 
+        size={36} 
       />
       <View style={styles.itemContent}>
         <View style={styles.itemHeader}>
@@ -27,6 +29,7 @@ const TransactionItem = ({ item }: { item: TransactionWithCategory }) => {
           </Text>
           <Text 
             variant="titleSm" 
+            numberOfLines={1}
             style={[
               styles.amount, 
               { color: isIncome ? colors.secondary : colors.onSurface }
@@ -45,7 +48,7 @@ const TransactionItem = ({ item }: { item: TransactionWithCategory }) => {
 };
 
 export const RecentTransactions = () => {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
   const navigation = useNavigation<any>();
   const { recentTransactions } = useDashboardStore();
 
@@ -55,28 +58,40 @@ export const RecentTransactions = () => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, { paddingHorizontal: spacing.xl, marginBottom: spacing.base }]}>
-        <Text variant="headlineSm" style={{ color: colors.onSurface }}>Recent Transactions</Text>
-        <Pressable onPress={() => navigation.navigate("TransactionsTab")}>
-          <Text variant="labelMd" style={{ color: colors.primary }}>See All</Text>
-        </Pressable>
+      <View style={{ marginBottom: spacing.base }}>
+        <SectionHeader
+          title="Transaksi Terbaru"
+          caption="Aktivitas terakhir yang tercatat."
+          actionLabel="Lihat"
+          onActionPress={() => navigation.navigate("TransactionsTab")}
+        />
       </View>
 
-      {recentTransactions.slice(0, 5).map((item) => (
-        <View key={item.id} style={{ paddingHorizontal: spacing.xl }}>
-          <TransactionItem item={item} />
-        </View>
-      ))}
+      <View>
+        <Surface level={1} style={[styles.listPanel, { borderRadius: radius.xl, paddingHorizontal: spacing.base }]}>
+          {recentTransactions.slice(0, 5).map((item, index) => (
+            <View
+              key={item.id}
+              style={[
+                index > 0 && {
+                  borderTopWidth: StyleSheet.hairlineWidth,
+                  borderTopColor: colors.outlineVariant,
+                },
+              ]}
+            >
+              <TransactionItem item={item} />
+            </View>
+          ))}
+        </Surface>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {},
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  listPanel: {
+    overflow: "hidden",
   },
   item: {
     flexDirection: "row",
@@ -94,5 +109,6 @@ const styles = StyleSheet.create({
   },
   amount: {
     fontVariant: ["tabular-nums"],
+    maxWidth: 132,
   },
 });

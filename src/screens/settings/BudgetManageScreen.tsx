@@ -42,12 +42,13 @@ export const BudgetManageScreen = () => {
     const budget = budgets.find(b => b.category_id === item.id && b.period === period);
     const isEditing = editingId === item.id;
     const amount = budget?.amount || 0;
+    const categoryColor = item.color || colors.primary;
 
     return (
-      <View style={[styles.budgetItem, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.lg, marginBottom: spacing.sm }]}>
+      <View style={[styles.budgetItem, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.md, marginBottom: spacing.sm }]}>
         <View style={styles.categoryInfo}>
-          <View style={[styles.iconBox, { backgroundColor: item.color + '20' }]}>
-            <Ionicons name={item.icon as any} size={20} color={item.color} />
+          <View style={[styles.iconBox, { backgroundColor: `${categoryColor}18`, borderRadius: radius.md }]}>
+            <Ionicons name={(item.icon || 'wallet-outline') as any} size={20} color={categoryColor} />
           </View>
           <Text style={[styles.categoryName, { color: colors.onSurface }]}>{item.name}</Text>
         </View>
