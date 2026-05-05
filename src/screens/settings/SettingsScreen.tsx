@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { SettingRow } from '../../components/settings/SettingRow';
 import { ThemeSwitcher } from '../../components/settings/ThemeSwitcher';
-import { Typography } from '../../constants/typography';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
 import { useNavigation } from '@react-navigation/native';
 import appJson from '../../../app.json';
+import { Text } from '../../components/common/Text';
+import { Surface } from '../../components/common/Surface';
+import { AppTopBar } from '../../components/common/AppTopBar';
+import { Ionicons } from '@expo/vector-icons';
 
 export const SettingsScreen = () => {
   const { colors, spacing, radius } = useTheme();
   const navigation = useNavigation<any>();
   const { 
-    theme, 
     currency, 
     fetchSettings, 
-    updateSetting, 
     resetAllData 
   } = useSettingsStore();
 
@@ -25,15 +26,6 @@ export const SettingsScreen = () => {
   useEffect(() => {
     fetchSettings();
   }, []);
-
-  const toggleTheme = async () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    try {
-      await updateSetting('theme', newTheme);
-    } catch (error) {
-      Alert.alert('Error', 'Gagal mengubah tema');
-    }
-  };
 
   const handleResetData = async () => {
     try {
@@ -45,53 +37,96 @@ export const SettingsScreen = () => {
     }
   };
 
-  const renderSection = (title: string, children: React.ReactNode) => (
+  const renderSection = (eyebrow: string, title: string, children: React.ReactNode, danger = false) => (
     <View style={styles.section}>
-      <Text style={[styles.sectionTitle, { color: colors.onSurfaceVariant, paddingHorizontal: spacing.xl }]}>
-        {title.toUpperCase()}
-      </Text>
-      <View style={[styles.sectionContent, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.lg }]}>
-        {children}
+      <View style={{ paddingHorizontal: spacing.xl, marginBottom: spacing.base }}>
+        <Text variant="labelSm" style={{ color: danger ? colors.error : colors.primary, fontWeight: '800' }}>
+          {eyebrow}
+        </Text>
+        <Text variant="titleLg" style={{ color: colors.onSurface, marginTop: 2 }}>
+          {title}
+        </Text>
       </View>
+      <Surface level={1} style={[styles.sectionContent, { borderRadius: radius.md }]}>
+        {children}
+      </Surface>
     </View>
   );
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: colors.surface }]}
-      contentContainerStyle={{ paddingBottom: 40 }}
-    >
-      <View style={[styles.header, { paddingTop: 60, paddingHorizontal: spacing.xl }]}>
-        <Text style={[styles.title, { color: colors.onSurface }]}>Pengaturan</Text>
+    <View style={[styles.container, { backgroundColor: colors.surface }]}>
+      <AppTopBar />
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={{ paddingBottom: 112 }}
+      >
+        <View style={[styles.profileHeader, { paddingTop: spacing["3xl"], paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }]}>
+        <View style={[styles.profileAvatarRing, { borderRadius: radius.full, backgroundColor: colors.primary }]}>
+          <View style={[styles.profileAvatar, { borderRadius: radius.full, backgroundColor: colors.primaryContainer }]}>
+            <Text variant="headlineMd" style={{ color: colors.primary }}>R</Text>
+          </View>
+          <View style={[styles.editBadge, { backgroundColor: colors.primary, borderColor: colors.surface, borderRadius: radius.full }]}>
+            <Ionicons name="pencil" size={12} color={colors.onPrimary} />
+          </View>
+        </View>
+        <Text variant="headlineMd" style={{ color: colors.onSurface, marginTop: spacing.lg }}>
+          Rafi
+        </Text>
+        <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>
+          rafi.sanctuary@finance.io
+        </Text>
       </View>
 
-      {renderSection('Tampilan', (
+      {renderSection('VISUALS', 'Appearance', (
         <>
           <SettingRow 
-            label="Tema Aplikasi" 
+            label="Light Mode" 
             icon="color-palette-outline"
             rightElement={<ThemeSwitcher />}
           />
+        </>
+      ))}
+
+      {renderSection('PREFERENCES', 'Localization', (
+        <>
           <SettingRow 
-            label="Mata Uang" 
-            value={currency} 
+            label="Currency" 
+            value={`${currency} (Rp)`}
             icon="cash-outline"
             onPress={() => {}} // TODO: Create Currency selection screen
           />
         </>
       ))}
 
-      {renderSection('Manajemen Finansial', (
+      {renderSection('WEALTH MANAGEMENT', 'My Assets', (
+        <>
+          <SettingRow 
+            label="Bank BCA" 
+            value="Rp 12.450.000"
+            icon="business-outline"
+            onPress={() => navigation.navigate('BudgetManage')}
+          />
+          <SettingRow 
+            label="Physical Cash" 
+            value="Rp 850.000"
+            icon="wallet-outline"
+            onPress={() => navigation.navigate('BudgetManage')}
+          />
+          <SettingRow 
+            label="GoPay" 
+            value="Rp 2.100.500"
+            icon="card-outline"
+            onPress={() => navigation.navigate('BudgetManage')}
+          />
+        </>
+      ))}
+
+      {renderSection('ORGANIZATION', 'Categories', (
         <>
           <SettingRow 
             label="Kategori Transaksi" 
             icon="list-outline"
             onPress={() => navigation.navigate('CategoryManage')}
-          />
-          <SettingRow 
-            label="Kategori Aset" 
-            icon="wallet-outline"
-            onPress={() => navigation.navigate('CategoryManage')} // Reuse category manage for now or update as needed
           />
           <SettingRow 
             label="Anggaran Bulanan" 
@@ -106,44 +141,41 @@ export const SettingsScreen = () => {
         </>
       ))}
 
-      {renderSection('Manajemen Data', (
+      {renderSection('PRIVACY & SECURITY', 'Data Management', (
         <>
           <SettingRow 
-            label="Ekspor Data (CSV)" 
+            label="Export Financial Report" 
             icon="download-outline"
             onPress={() => navigation.navigate('DataManage')}
           />
           <SettingRow 
-            label="Impor Data" 
+            label="Import Data" 
             icon="cloud-upload-outline"
             onPress={() => navigation.navigate('DataManage')}
           />
           <SettingRow 
-            label="Hapus Semua Data" 
+            label="Clear All History" 
             icon="trash-outline"
             destructive
             onPress={() => setResetModalVisible(true)}
           />
         </>
-      ))}
+      ), true)}
 
-      {renderSection('Tentang', (
-        <SettingRow 
-          label="Versi Aplikasi" 
-          value={appJson.expo.version}
-          icon="information-circle-outline"
+      <Text variant="labelSm" style={[styles.version, { color: colors.onSurfaceVariant }]}>
+        FINANCIAL SANCTUARY V{appJson.expo.version}
+      </Text>
+
+        <ConfirmModal
+          visible={resetModalVisible}
+          title="Hapus Semua Data"
+          message="Apakah Anda yakin ingin menghapus semua data? Tindakan ini akan menghapus semua transaksi, tugas, target, dan anggaran. Kategori default tidak akan dihapus."
+          onConfirm={handleResetData}
+          onCancel={() => setResetModalVisible(false)}
+          isDestructive={true}
         />
-      ))}
-
-      <ConfirmModal
-        visible={resetModalVisible}
-        title="Hapus Semua Data"
-        message="Apakah Anda yakin ingin menghapus semua data? Tindakan ini akan menghapus semua transaksi, tugas, target, dan anggaran. Kategori default tidak akan dihapus."
-        onConfirm={handleResetData}
-        onCancel={() => setResetModalVisible(false)}
-        isDestructive={true}
-      />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -151,24 +183,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    marginBottom: 24,
+  profileHeader: {
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 32,
-    fontFamily: Typography.fontFamily.bold,
+  profileAvatarRing: {
+    width: 128,
+    height: 128,
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 116,
+    height: 116,
+    borderWidth: 4,
+    borderColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editBadge: {
+    position: 'absolute',
+    right: 8,
+    bottom: 8,
+    width: 32,
+    height: 32,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 12,
-    fontFamily: Typography.fontFamily.medium,
-    marginBottom: 8,
+    marginBottom: 32,
   },
   sectionContent: {
     marginHorizontal: 16,
     paddingHorizontal: 16,
     paddingVertical: 4,
+  },
+  version: {
+    textAlign: 'center',
+    marginTop: 8,
+    opacity: 0.6,
   },
 });

@@ -13,17 +13,21 @@ import { SettingsStack } from "./SettingsStack";
 const Tab = createBottomTabNavigator();
 
 const TabIcon = ({ name, color, focused }: { name: string; color: string; focused: boolean }) => {
-  const { colors, spacing } = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <View style={styles.iconContainer}>
-      <Ionicons name={name as any} size={24} color={color} />
+    <View
+      style={[
+        styles.iconContainer,
+        { backgroundColor: focused ? `${colors.primary}18` : "transparent" },
+      ]}
+    >
+      <Ionicons name={name as any} size={22} color={color} />
       <View
         style={[
           styles.indicator,
           {
             backgroundColor: focused ? colors.primary : "transparent",
-            marginTop: spacing.xs
           }
         ]}
       />
@@ -32,33 +36,46 @@ const TabIcon = ({ name, color, focused }: { name: string; color: string; focuse
 };
 
 export const MainTabNavigator = () => {
-  const { colors, isDark } = useTheme();
+  const { colors, isDark, typography } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.onSurfaceVariant,
+        tabBarLabelStyle: {
+          ...typography.labelSm,
+          textTransform: "uppercase",
+          marginTop: 4,
+        },
         tabBarStyle: {
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
-          height: 48 + insets.bottom,
-          paddingBottom: insets.bottom,
-          backgroundColor: Platform.OS === "ios" ? "transparent" : `${colors.surface}E6`,
-          borderTopWidth: 0,
-          elevation: 0,
+          height: 80 + insets.bottom,
+          paddingTop: 12,
+          paddingBottom: Math.max(insets.bottom, 10),
+          backgroundColor: Platform.OS === "ios" ? "transparent" : `${colors.surfaceContainerLow}F2`,
+          borderTopWidth: 1,
+          borderTopColor: colors.outlineVariant,
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          elevation: 10,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: isDark ? 0.24 : 0.12,
+          shadowRadius: 20,
         },
         tabBarBackground: () => (
           Platform.OS === "ios" ? (
             <BlurView
-              intensity={80}
-              tint={isDark ? "light" : "dark"}
-              style={StyleSheet.absoluteFill}
+              intensity={70}
+              tint={isDark ? "dark" : "light"}
+              style={[StyleSheet.absoluteFill, styles.tabBackground]}
             />
           ) : null
         ),
@@ -68,6 +85,7 @@ export const MainTabNavigator = () => {
         name="DashboardTab"
         component={DashboardStack}
         options={{
+          title: "HOME",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name={focused ? "grid" : "grid-outline"} color={color} focused={focused} />
           ),
@@ -77,6 +95,7 @@ export const MainTabNavigator = () => {
         name="TransactionsTab"
         component={TransactionStack}
         options={{
+          title: "WALLET",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name={focused ? "swap-horizontal" : "swap-horizontal-outline"} color={color} focused={focused} />
           ),
@@ -86,6 +105,7 @@ export const MainTabNavigator = () => {
         name="TasksTab"
         component={TaskStack}
         options={{
+          title: "TASKS",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name={focused ? "checkbox" : "checkbox-outline"} color={color} focused={focused} />
           ),
@@ -95,6 +115,7 @@ export const MainTabNavigator = () => {
         name="SettingsTab"
         component={SettingsStack}
         options={{
+          title: "PROFILE",
           tabBarIcon: ({ color, focused }) => (
             <TabIcon name={focused ? "settings" : "settings-outline"} color={color} focused={focused} />
           ),
@@ -108,12 +129,20 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 10,
+    width: 44,
+    height: 26,
+    borderRadius: 999,
   },
   indicator: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    // marginTop moved to inline style using spacing token
+    position: "absolute",
+    bottom: -22,
+    width: 5,
+    height: 5,
+    borderRadius: 999,
+  },
+  tabBackground: {
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    overflow: "hidden",
   },
 });

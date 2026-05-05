@@ -69,11 +69,14 @@ export const CategoryManageScreen = () => {
     }
   };
 
-  const renderCategoryItem = ({ item }: { item: Category }) => (
-    <View style={[styles.categoryItem, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.lg, marginBottom: spacing.sm }]}>
+  const renderCategoryItem = ({ item }: { item: Category }) => {
+    const categoryColor = item.color || colors.primary;
+
+    return (
+    <View style={[styles.categoryItem, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.md, marginBottom: spacing.sm }]}>
       <View style={styles.categoryLeft}>
-        <View style={[styles.iconBox, { backgroundColor: item.color + '20' }]}>
-          <Ionicons name={item.icon as any} size={20} color={item.color} />
+        <View style={[styles.iconBox, { backgroundColor: `${categoryColor}18`, borderRadius: radius.md }]}>
+          <Ionicons name={(item.icon || 'wallet-outline') as any} size={20} color={categoryColor} />
         </View>
         <Text style={[styles.categoryName, { color: colors.onSurface }]}>{item.name}</Text>
         {item.is_default === 1 && (
@@ -96,7 +99,8 @@ export const CategoryManageScreen = () => {
         )}
       </View>
     </View>
-  );
+    );
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>

@@ -14,7 +14,7 @@ interface SettingRowProps {
 }
 
 export const SettingRow = ({ label, value, icon, onPress, destructive, rightElement }: SettingRowProps) => {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
 
   return (
     <TouchableOpacity
@@ -29,8 +29,17 @@ export const SettingRow = ({ label, value, icon, onPress, destructive, rightElem
     >
       <View style={styles.left}>
         {icon && (
-          <View style={[styles.iconContainer, { marginRight: spacing.md }]}>
-            <Ionicons name={icon} size={22} color={destructive ? colors.error : colors.onSurface} />
+          <View
+            style={[
+              styles.iconContainer,
+              {
+                marginRight: spacing.md,
+                backgroundColor: destructive ? `${colors.error}14` : colors.surfaceContainerHigh,
+                borderRadius: radius.sm,
+              },
+            ]}
+          >
+            <Ionicons name={icon} size={18} color={destructive ? colors.error : colors.primary} />
           </View>
         )}
         <Text
@@ -73,7 +82,9 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     width: 32,
+    height: 32,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   label: {
     fontSize: 16,

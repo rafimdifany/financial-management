@@ -57,7 +57,7 @@ export const TaskFormScreen = () => {
     const payload = {
       title: title.trim(),
       priority,
-      due_date: dueDate ? dueDate.toISOString() : null,
+      due_date: dueDate ? dueDate.toISOString() : undefined,
     };
 
     try {

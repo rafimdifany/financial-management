@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../hooks/useTheme";
 import { Text } from "../common/Text";
@@ -8,19 +8,18 @@ import { useDashboardStore } from "../../stores/useDashboardStore";
 import { formatDate } from "../../utils/formatDate";
 import { Task } from "../../types/task";
 import { Ionicons } from "@expo/vector-icons";
+import { Surface } from "../common/Surface";
+import { SectionHeader } from "../common/SectionHeader";
 
 const TaskItem = ({ item }: { item: Task }) => {
-  const { colors, spacing, radius } = useTheme();
+  const { colors, spacing } = useTheme();
 
   return (
     <View 
       style={[
         styles.item, 
         { 
-          marginBottom: spacing.sm, 
-          backgroundColor: colors.surfaceContainerLow,
-          padding: spacing.md,
-          borderRadius: radius.md,
+          paddingVertical: spacing.md,
         }
       ]}
     >
@@ -45,7 +44,7 @@ const TaskItem = ({ item }: { item: Task }) => {
 };
 
 export const PendingTasks = () => {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
   const navigation = useNavigation<any>();
   const { pendingTasks } = useDashboardStore();
 
@@ -55,28 +54,40 @@ export const PendingTasks = () => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, { paddingHorizontal: spacing.xl, marginBottom: spacing.base }]}>
-        <Text variant="headlineSm" style={{ color: colors.onSurface }}>Pending Tasks</Text>
-        <Pressable onPress={() => navigation.navigate("TasksTab")}>
-          <Text variant="labelMd" style={{ color: colors.primary }}>See All</Text>
-        </Pressable>
+      <View style={{ marginBottom: spacing.base }}>
+        <SectionHeader
+          title="Tugas Pending"
+          caption="Hal finansial yang perlu ditindaklanjuti."
+          actionLabel="Lihat"
+          onActionPress={() => navigation.navigate("TasksTab")}
+        />
       </View>
 
-      {pendingTasks.slice(0, 3).map((item) => (
-        <View key={item.id} style={{ paddingHorizontal: spacing.xl }}>
-          <TaskItem item={item} />
-        </View>
-      ))}
+      <View>
+        <Surface level={1} style={[styles.listPanel, { borderRadius: radius.lg, paddingHorizontal: spacing.base }]}>
+          {pendingTasks.slice(0, 3).map((item, index) => (
+            <View
+              key={item.id}
+              style={[
+                index > 0 && {
+                  borderTopWidth: StyleSheet.hairlineWidth,
+                  borderTopColor: colors.outlineVariant,
+                },
+              ]}
+            >
+              <TaskItem item={item} />
+            </View>
+          ))}
+        </Surface>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {},
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  listPanel: {
+    overflow: "hidden",
   },
   item: {
     flexDirection: "row",

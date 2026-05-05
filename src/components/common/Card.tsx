@@ -1,5 +1,5 @@
 import React from "react";
-import { ViewStyle, StyleSheet, Pressable } from "react-native";
+import { ViewStyle, StyleSheet, Pressable, StyleProp } from "react-native";
 import Animated, { 
   useAnimatedStyle, 
   useSharedValue, 
@@ -12,7 +12,7 @@ import { Surface } from "./Surface";
 interface Props {
   children: React.ReactNode;
   onPress?: () => void;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   level?: 1 | 2 | 3 | 4;
 }
 
@@ -41,8 +41,8 @@ export const Card: React.FC<Props> = ({
       style={[
         styles.card,
         {
-          padding: spacing.xl,
-          borderRadius: radius.xl,
+          padding: spacing.lg,
+          borderRadius: radius.lg,
         },
         style,
       ]}

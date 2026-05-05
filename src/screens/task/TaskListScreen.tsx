@@ -1,20 +1,22 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useTaskStore } from '../../stores/useTaskStore';
 import { TaskItem } from '../../components/task/TaskItem';
-import { Typography } from '../../constants/typography';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { TaskStatus, Task } from '../../types/task';
 import { EmptyState } from '../../components/common/EmptyState';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
 import { Pressable } from 'react-native';
+import { Text } from '../../components/common/Text';
+import { AppTopBar } from '../../components/common/AppTopBar';
+import { Surface } from '../../components/common/Surface';
+import { ProgressBar } from '../../components/common/ProgressBar';
 
 const FILTER_OPTIONS: { label: string; value: TaskStatus | 'all' }[] = [
-  { label: 'Semua', value: 'all' },
-  { label: 'Todo', value: 'todo' },
+  { label: 'To Do', value: 'todo' },
   { label: 'In Progress', value: 'in_progress' },
   { label: 'Done', value: 'done' },
 ];
@@ -35,6 +37,8 @@ export const TaskListScreen = () => {
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const completedCount = tasks.filter(task => task.status === 'done').length;
+  const completionRate = tasks.length > 0 ? completedCount / tasks.length : 0;
 
   useEffect(() => {
     fetchTasks();
@@ -69,8 +73,8 @@ export const TaskListScreen = () => {
     <ScrollView 
       horizontal 
       showsHorizontalScrollIndicator={false} 
-      style={styles.filterContainer}
-      contentContainerStyle={{ paddingHorizontal: spacing.xl, paddingBottom: spacing.base }}
+      style={[styles.filterContainer, { backgroundColor: colors.surfaceContainerHigh, borderColor: colors.outlineVariant, borderRadius: radius.md }]}
+      contentContainerStyle={{ padding: 5, flexGrow: 1 }}
     >
       {FILTER_OPTIONS.map((option) => (
         <Pressable
@@ -79,18 +83,13 @@ export const TaskListScreen = () => {
           style={[
             styles.filterChip,
             {
-              backgroundColor: statusFilter === option.value ? colors.primary : colors.surfaceContainerHigh,
-              borderRadius: radius.md,
-              marginRight: spacing.sm,
+              backgroundColor: statusFilter === option.value ? colors.surfaceContainerLow : 'transparent',
+              borderRadius: radius.sm,
+              flex: 1,
             }
           ]}
         >
-          <Text 
-            style={[
-              styles.filterText, 
-              { color: statusFilter === option.value ? colors.onPrimary : colors.onSurfaceVariant }
-            ]}
-          >
+          <Text variant="labelLg" style={{ color: statusFilter === option.value ? colors.primary : colors.onSurfaceVariant }}>
             {option.label}
           </Text>
         </Pressable>
@@ -109,11 +108,7 @@ export const TaskListScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <View style={[styles.header, { paddingTop: insets.top + spacing.md, paddingHorizontal: spacing.xl }]}>
-        <Text style={[styles.title, { color: colors.onSurface }]}>Daftar Tugas</Text>
-      </View>
-
-      {renderFilter()}
+      <AppTopBar />
 
       <FlatList
         data={tasks}
@@ -130,10 +125,52 @@ export const TaskListScreen = () => {
           styles.listContent, 
           { 
             paddingHorizontal: spacing.xl, 
-            paddingBottom: insets.bottom + 64 + spacing.xl * 2 
+            paddingTop: spacing.xl,
+            paddingBottom: insets.bottom + 104
           }
         ]}
         ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+        ListHeaderComponent={
+          <View style={{ marginBottom: spacing["2xl"], gap: spacing["2xl"] }}>
+            <View>
+              <Text variant="labelMd" style={{ color: colors.primary, fontWeight: '800' }}>
+                PRODUCTIVITY HUB
+              </Text>
+              <Text variant="headlineLg" style={{ color: colors.onSurface, marginTop: 4 }}>
+                Your Tasks
+              </Text>
+            </View>
+            {renderFilter()}
+          </View>
+        }
+        ListFooterComponent={
+          tasks.length > 0 ? (
+            <View style={[styles.bentoGrid, { gap: spacing.base, marginTop: spacing.lg }]}>
+              <Surface level={1} style={[styles.bentoCard, { borderRadius: radius.md, padding: spacing.base }]}>
+                <Ionicons name="stats-chart-outline" size={18} color={colors.primary} />
+                <Text variant="bodySm" style={{ color: colors.onSurfaceVariant, marginTop: spacing.sm }}>
+                  Completion Rate
+                </Text>
+                <Text variant="headlineMd" style={{ color: colors.onSurface }}>
+                  {Math.round(completionRate * 100)}%
+                </Text>
+                <ProgressBar progress={completionRate} color={colors.primary} height={6} />
+              </Surface>
+              <Surface level={1} style={[styles.bentoCard, styles.tealBento, { borderRadius: radius.md, padding: spacing.base, backgroundColor: colors.primary }]}>
+                <Ionicons name="star" size={18} color={colors.onPrimary} />
+                <Text variant="labelSm" style={{ color: colors.onPrimary, marginTop: spacing.sm, fontWeight: '800' }}>
+                  PRO MILESTONE
+                </Text>
+                <Text variant="titleLg" style={{ color: colors.onPrimary }}>
+                  Focus on Savings
+                </Text>
+                <Text variant="bodySm" style={{ color: `${colors.onPrimary}E6` }}>
+                  You're {Math.max(tasks.length - completedCount, 0)} tasks away from your monthly goal.
+                </Text>
+              </Surface>
+            </View>
+          ) : null
+        }
         ListEmptyComponent={
           !isLoading ? (
             <View style={{ marginTop: 100 }}>
@@ -152,9 +189,9 @@ export const TaskListScreen = () => {
           styles.fab,
           {
             backgroundColor: colors.primary,
-            bottom: insets.bottom + 64 + spacing.lg,
+            bottom: insets.bottom + 88,
             right: spacing.xl,
-            borderRadius: radius.full,
+            borderRadius: radius.md,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
@@ -187,32 +224,36 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 16,
   },
-  title: {
-    fontSize: 32,
-    fontFamily: Typography.fontFamily.bold,
-  },
   filterContainer: {
-    maxHeight: 50,
+    maxHeight: 46,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   filterChip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  filterText: {
-    fontSize: 14,
-    fontFamily: Typography.fontFamily.medium,
+    minWidth: 104,
   },
   listContent: {
     flexGrow: 1,
-    paddingTop: 8,
   },
   fab: {
     position: 'absolute',
-    width: 64,
-    height: 64,
+    width: 56,
+    height: 56,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  bentoGrid: {
+    flexDirection: 'row',
+  },
+  bentoCard: {
+    flex: 1,
+    minHeight: 150,
+    justifyContent: 'space-between',
+  },
+  tealBento: {
+    borderWidth: 0,
   },
 });

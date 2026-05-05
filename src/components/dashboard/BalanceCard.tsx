@@ -8,48 +8,57 @@ import { useDashboardStore } from "../../stores/useDashboardStore";
 import { formatCurrency } from "../../utils/formatCurrency";
 
 export const BalanceCard = () => {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
   const { balance, income, expense } = useDashboardStore();
+  const netFlow = income - expense;
 
   return (
-    <Card style={styles.container}>
-      <View style={[styles.header, { marginBottom: spacing.sm }]}>
-        <Text variant="labelMd" style={[styles.label, { color: colors.onSurfaceVariant }]}>
-          TOTAL BALANCE
-        </Text>
+    <Card
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.primary,
+          borderRadius: radius.xl,
+          padding: spacing["2xl"],
+          borderWidth: 0,
+        },
+      ]}
+    >
+      <View style={[styles.header, { marginBottom: spacing.xl }]}>
+        <View>
+          <Text variant="labelSm" style={styles.eyebrow}>
+            TOTAL BALANCE
+          </Text>
+        </View>
       </View>
       
       <Text 
-        variant="headlineLg" 
-        style={[styles.balance, { color: colors.onSurface, marginBottom: spacing.xl }]}
+        variant="displayMd"
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.72}
+        style={[styles.balance, { color: colors.onPrimary, marginBottom: spacing.xl }]}
       >
         {formatCurrency(balance)}
       </Text>
 
-      <View style={styles.row}>
-        <View style={[styles.statContainer, { gap: spacing.sm }]}>
-          <View style={[styles.iconWrapper, { backgroundColor: `${colors.secondary}1A` }]}>
-            <Ionicons name="arrow-up" size={16} color={colors.secondary} />
-          </View>
-          <View>
-            <Text variant="labelSm" style={{ color: colors.onSurfaceVariant }}>Income</Text>
-            <Text variant="titleMd" style={[styles.amount, { color: colors.onSurface }]}>
-              {formatCurrency(income)}
-            </Text>
-          </View>
-        </View>
-
-        <View style={[styles.statContainer, { gap: spacing.sm }]}>
-          <View style={[styles.iconWrapper, { backgroundColor: `${colors.error}1A` }]}>
-            <Ionicons name="arrow-down" size={16} color={colors.error} />
-          </View>
-          <View>
-            <Text variant="labelSm" style={{ color: colors.onSurfaceVariant }}>Expense</Text>
-            <Text variant="titleMd" style={[styles.amount, { color: colors.onSurface }]}>
-              {formatCurrency(expense)}
-            </Text>
-          </View>
-        </View>
+      <View
+        style={[
+          styles.statusPill,
+          {
+            backgroundColor: "rgba(255,255,255,0.2)",
+            borderRadius: radius.md,
+          },
+        ]}
+      >
+        <Ionicons
+          name={netFlow >= 0 ? "trending-up" : "trending-down"}
+          size={14}
+          color={colors.onPrimary}
+        />
+        <Text variant="labelSm" style={{ color: colors.onPrimary }}>
+          {netFlow >= 0 ? "Surplus bulan ini" : "Defisit bulan ini"}
+        </Text>
       </View>
     </Card>
   );
@@ -60,35 +69,23 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   header: {
-    // marginBottom moved to inline style
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
   },
-  label: {
+  eyebrow: {
+    color: "rgba(255,255,255,0.72)",
+    fontWeight: "800",
     textTransform: "uppercase",
-    letterSpacing: 1.5, // roughly 0.1em
   },
   balance: {
     fontVariant: ["tabular-nums"],
-    // marginBottom moved to inline style
   },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  statContainer: {
+  statusPill: {
     flexDirection: "row",
     alignItems: "center",
-    // gap moved to inline style
-  },
-  iconWrapper: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  amount: {
-    fontVariant: ["tabular-nums"],
-    marginTop: 2,
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
   },
 });

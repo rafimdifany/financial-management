@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, ViewStyle, ActivityIndicator, View } from "react-native";
+import { Pressable, StyleSheet, ViewStyle, TextStyle, ActivityIndicator, View } from "react-native";
 import Animated, { 
   useAnimatedStyle, 
   useSharedValue, 
@@ -19,6 +19,7 @@ interface Props {
   loading?: boolean;
   disabled?: boolean;
   style?: ViewStyle;
+  textStyle?: TextStyle;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -30,6 +31,7 @@ export const Button: React.FC<Props> = ({
   loading = false,
   disabled = false,
   style,
+  textStyle,
 }) => {
   const { colors, spacing, radius, isDark } = useTheme();
   const pressed = useSharedValue(0);
@@ -47,13 +49,13 @@ export const Button: React.FC<Props> = ({
     switch (variant) {
       case "primary":
         return {
-          colors: isDark ? [colors.primary, colors.primaryContainer] : [colors.primary, colors.primaryContainer],
+          colors: isDark ? [colors.primary, colors.secondary] : [colors.primary, colors.secondary],
           text: colors.onPrimary,
         };
       case "secondary":
         return {
-          backgroundColor: colors.secondaryContainer,
-          text: colors.onSecondary,
+          backgroundColor: colors.surfaceContainerHigh,
+          text: colors.onSurface,
         };
       case "ghost":
         return {
@@ -85,7 +87,8 @@ export const Button: React.FC<Props> = ({
         style={{ 
           color: variantStyles.text, 
           textAlign: "center",
-          fontWeight: variant === "ghost" ? "700" : "500"
+          fontWeight: variant === "ghost" ? "700" : "500",
+          ...textStyle,
         }}
       >
         {title}
@@ -102,7 +105,7 @@ export const Button: React.FC<Props> = ({
       style={[
         styles.container,
         {
-          borderRadius: radius.md,
+          borderRadius: radius.sm,
           opacity: disabled ? 0.5 : 1,
         },
         variant !== "primary" && { backgroundColor: variantStyles.backgroundColor },
@@ -120,7 +123,7 @@ export const Button: React.FC<Props> = ({
             { 
               paddingVertical: spacing.md,
               paddingHorizontal: spacing.xl,
-              borderRadius: radius.md,
+              borderRadius: radius.sm,
             }
           ]}
         >

@@ -60,16 +60,18 @@ export const GoalManageScreen = () => {
   const renderGoalItem = ({ item }: { item: Goal }) => {
     const progress = item.target_amount > 0 ? Math.min(item.current_amount / item.target_amount, 1) : 0;
     const percentage = Math.round(progress * 100);
+    const goalColor = item.color || colors.primary;
+    const goalIcon = item.icon || 'trophy-outline';
 
     return (
       <TouchableOpacity 
         onPress={() => handleEdit(item)}
-        style={[styles.goalItem, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.lg, marginBottom: spacing.md }]}
+        style={[styles.goalItem, { backgroundColor: colors.surfaceContainerLow, borderRadius: radius.md, marginBottom: spacing.md }]}
       >
         <View style={styles.goalHeader}>
           <View style={styles.goalLeft}>
-            <View style={[styles.iconBox, { backgroundColor: item.color + '20' }]}>
-              <Ionicons name={item.icon as any} size={24} color={item.color} />
+            <View style={[styles.iconBox, { backgroundColor: `${goalColor}18`, borderRadius: radius.md }]}>
+              <Ionicons name={goalIcon as any} size={24} color={goalColor} />
             </View>
             <View>
               <Text style={[styles.goalName, { color: colors.onSurface }]}>{item.name}</Text>
@@ -87,14 +89,14 @@ export const GoalManageScreen = () => {
 
         <View style={styles.progressContainer}>
           <View style={[styles.progressBarBg, { backgroundColor: colors.surfaceContainerHigh }]}>
-            <View style={[styles.progressBarFill, { backgroundColor: item.color, width: `${percentage}%` }]} />
+            <View style={[styles.progressBarFill, { backgroundColor: goalColor, width: `${percentage}%` }]} />
           </View>
           <View style={styles.progressTextContainer}>
             <Text style={[styles.progressAmount, { color: colors.onSurface }]}>
               {formatCurrency(item.current_amount)}
               <Text style={{ color: colors.outline, fontWeight: 'normal' }}> / {formatCurrency(item.target_amount)}</Text>
             </Text>
-            <Text style={[styles.percentageText, { color: item.color }]}>{percentage}%</Text>
+            <Text style={[styles.percentageText, { color: goalColor }]}>{percentage}%</Text>
           </View>
         </View>
       </TouchableOpacity>
