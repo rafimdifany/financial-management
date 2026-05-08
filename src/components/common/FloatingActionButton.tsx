@@ -19,7 +19,7 @@ interface Props {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const FloatingActionButton: React.FC<Props> = ({ onPress, children, style }) => {
-  const { colors, spacing, radius } = useTheme();
+  const { colors, spacing, radius, isDark } = useTheme();
   const pressed = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -42,7 +42,7 @@ export const FloatingActionButton: React.FC<Props> = ({ onPress, children, style
       style={[styles.fabWrapper, animatedStyle, style]}
     >
       <LinearGradient
-        colors={[colors.primary, colors.primaryContainer]}
+        colors={isDark ? [colors.primary, colors.primaryContainer] : ["#006b5f", "#14b8a6"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[

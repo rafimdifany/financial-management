@@ -17,16 +17,22 @@ export const BalanceCard = () => {
       style={[
         styles.container,
         {
-          backgroundColor: colors.primary,
+          backgroundColor: colors.surfaceContainerLowest,
           borderRadius: radius.xl,
           padding: spacing["2xl"],
           borderWidth: 0,
+          // Add ambient shadow as per spec §6.4
+          shadowColor: colors.onSurface,
+          shadowOffset: { width: 0, height: 16 },
+          shadowOpacity: 0.04,
+          shadowRadius: 32,
+          elevation: 4,
         },
       ]}
     >
       <View style={[styles.header, { marginBottom: spacing.xl }]}>
         <View>
-          <Text variant="labelSm" style={styles.eyebrow}>
+          <Text variant="labelSm" style={[styles.eyebrow, { color: colors.onSurfaceVariant }]}>
             TOTAL BALANCE
           </Text>
         </View>
@@ -37,7 +43,7 @@ export const BalanceCard = () => {
         numberOfLines={1}
         adjustsFontSizeToFit
         minimumFontScale={0.72}
-        style={[styles.balance, { color: colors.onPrimary, marginBottom: spacing.xl }]}
+        style={[styles.balance, { color: colors.onSurface, marginBottom: spacing.xl }]}
       >
         {formatCurrency(balance)}
       </Text>
@@ -46,7 +52,7 @@ export const BalanceCard = () => {
         style={[
           styles.statusPill,
           {
-            backgroundColor: "rgba(0, 0, 0, 0.12)",
+            backgroundColor: netFlow >= 0 ? `${colors.secondary}15` : `${colors.error}15`,
             borderRadius: radius.md,
           },
         ]}
@@ -54,9 +60,9 @@ export const BalanceCard = () => {
         <Ionicons
           name={netFlow >= 0 ? "trending-up" : "trending-down"}
           size={14}
-          color={colors.onPrimary}
+          color={netFlow >= 0 ? colors.secondary : colors.error}
         />
-        <Text variant="labelSm" style={{ color: colors.onPrimary }}>
+        <Text variant="labelSm" style={{ color: netFlow >= 0 ? colors.secondary : colors.error }}>
           {netFlow >= 0 ? "Surplus bulan ini" : "Defisit bulan ini"}
         </Text>
       </View>

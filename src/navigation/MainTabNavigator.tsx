@@ -59,21 +59,15 @@ export const MainTabNavigator = () => {
           height: 80 + insets.bottom,
           paddingTop: 12,
           paddingBottom: Math.max(insets.bottom, 10),
-          backgroundColor: Platform.OS === "ios" ? "transparent" : `${colors.surfaceContainerLow}F2`,
-          borderTopWidth: 1,
-          borderTopColor: colors.outlineVariant,
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-          elevation: 10,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: isDark ? 0.24 : 0.12,
-          shadowRadius: 20,
+          backgroundColor: Platform.OS === "ios" ? "transparent" : (isDark ? `${colors.surfaceContainerLow}F2` : `${colors.surface}CC`),
+          borderTopWidth: 0, // Enforce No-Line Rule §1.1
+          elevation: isDark ? 10 : 0,
+          shadowColor: isDark ? "#000" : "transparent",
         },
         tabBarBackground: () => (
           Platform.OS === "ios" ? (
             <BlurView
-              intensity={70}
+              intensity={isDark ? 70 : 80}
               tint={isDark ? "dark" : "light"}
               style={[StyleSheet.absoluteFill, styles.tabBackground]}
             />

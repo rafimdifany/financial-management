@@ -38,6 +38,8 @@ export const Input: React.FC<Props> = ({
       backgroundColor: isFocused 
         ? (isDark ? colors.surfaceContainerHigh : colors.surfaceContainerLowest)
         : (isDark ? colors.surfaceContainerLowest : colors.surfaceContainerHigh),
+      borderWidth: 1,
+      borderColor: isFocused ? colors.primary : "transparent",
     };
   });
 
