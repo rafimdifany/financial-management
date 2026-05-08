@@ -19,7 +19,7 @@ export const TransactionSummary: React.FC<Props> = ({ income, expense }) => {
       style={[
         styles.container, 
         { 
-          backgroundColor: colors.surfaceContainerHigh, 
+          backgroundColor: colors.surfaceContainerLowest, 
           borderRadius: radius.md,
           padding: spacing.lg,
           marginBottom: spacing.lg

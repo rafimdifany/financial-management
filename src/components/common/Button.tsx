@@ -50,7 +50,7 @@ export const Button: React.FC<Props> = ({
     switch (variant) {
       case "primary":
         return {
-          colors: [colors.primary, colors.primaryContainer],
+          colors: isDark ? [colors.primary, colors.primaryContainer] : ["#006b5f", "#14b8a6"],
           text: colors.onPrimary,
         };
       case "secondary":

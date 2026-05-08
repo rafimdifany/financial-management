@@ -124,7 +124,7 @@ export const TransactionListScreen = () => {
         style={[
           styles.filterChip, 
           { 
-            backgroundColor: isActive ? colors.primary : colors.surfaceContainerHigh,
+            backgroundColor: isActive ? colors.primary : colors.surfaceContainerHighest,
           }
         ]}
       >

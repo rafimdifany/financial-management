@@ -42,6 +42,9 @@ export const Surface: React.FC<Props> = ({
         {
           backgroundColor: getBackgroundColor(),
           borderRadius: radius.md,
+          // Ghost borders §6.4
+          borderWidth: isDark ? 0 : 1,
+          borderColor: isDark ? "transparent" : `${colors.outlineVariant}26`,
         },
         style,
       ]}
