@@ -44,7 +44,7 @@ export const budgetRepository = {
   async create(data: CreateBudget): Promise<number> {
     const db = await getDatabase();
     const result = await db.runAsync(
-      "INSERT INTO budgets (category_id, amount, period) VALUES (?, ?, ?)",
+      "INSERT OR REPLACE INTO budgets (category_id, amount, period) VALUES (?, ?, ?)",
       [data.category_id, data.amount, data.period]
     );
     return result.lastInsertRowId;
