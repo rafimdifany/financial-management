@@ -75,7 +75,7 @@ const BudgetCard = ({ item, cardWidth }: { item: BudgetWithSpent; cardWidth: num
 };
 
 export const BudgetProgress = () => {
-  const { spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const CARD_WIDTH = Math.min(SCREEN_WIDTH * 0.76, 340);
   const { budgetProgress } = useDashboardStore();
