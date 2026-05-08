@@ -14,6 +14,7 @@ import { Text } from '../../components/common/Text';
 import { AppTopBar } from '../../components/common/AppTopBar';
 import { Surface } from '../../components/common/Surface';
 import { ProgressBar } from '../../components/common/ProgressBar';
+import { FloatingActionButton } from '../../components/common/FloatingActionButton';
 
 const FILTER_OPTIONS: { label: string; value: TaskStatus | 'all' }[] = [
   { label: 'To Do', value: 'todo' },
@@ -187,26 +188,12 @@ export const TaskListScreen = () => {
         }
       />
 
-      <Pressable
-        style={[
-          styles.fab,
-          {
-            backgroundColor: colors.primary,
-            bottom: insets.bottom + 88,
-            right: spacing.xl,
-            borderRadius: radius.md,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
-            elevation: 5,
-            zIndex: 10,
-          }
-        ]}
+      <FloatingActionButton
         onPress={() => navigation.navigate('TaskForm')}
+        style={{ bottom: insets.bottom + 88, right: spacing.xl }}
       >
         <Ionicons name="add" size={32} color={colors.onPrimary} />
-      </Pressable>
+      </FloatingActionButton>
 
       <ConfirmModal
         visible={deleteModalVisible}
@@ -229,7 +216,6 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     maxHeight: 46,
-    borderWidth: StyleSheet.hairlineWidth,
   },
   filterChip: {
     paddingHorizontal: 16,
@@ -240,13 +226,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     flexGrow: 1,
-  },
-  fab: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   bentoGrid: {
     flexDirection: 'row',

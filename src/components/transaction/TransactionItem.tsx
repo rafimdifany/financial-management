@@ -38,7 +38,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
         onPress={onPress}
         style={{ marginBottom: spacing.base }}
       >
-        <Card level={1} style={[styles.card, { borderRadius: 16 }]}>
+        <Card level={1} style={styles.card}>
           <View style={styles.row}>
             <CategoryIcon 
               icon={transaction.category_icon || 'cash'} 
@@ -59,7 +59,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
                 numberOfLines={1}
                 style={[
                   styles.amount,
-                  { color: transaction.type === 'income' ? colors.primary : colors.error }
+                  { color: transaction.type === 'income' ? colors.secondary : colors.error }
                 ]}
               >
                 {transaction.type === 'income' ? '+ Rp ' : '- Rp '}
@@ -78,7 +78,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
 
 const styles = StyleSheet.create({
   card: {
-    padding: 17,
+    padding: spacing.xl,
   },
   row: {
     flexDirection: 'row',

@@ -63,12 +63,11 @@ export const CategoryPicker: React.FC<Props> = ({
       >
         <View style={[
           styles.iconContainer,
-          isSelected && { 
-            borderWidth: 2, 
-            borderColor: colors.primary,
-            padding: 2
-          },
-          { borderRadius: radius.full }
+          { 
+            borderRadius: radius.full,
+            backgroundColor: isSelected ? `${colors.primary}22` : 'transparent',
+            padding: isSelected ? 4 : 0,
+          }
         ]}>
           <CategoryIcon 
             icon={item.icon} 

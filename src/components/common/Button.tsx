@@ -9,6 +9,7 @@ import Animated, {
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../hooks/useTheme";
 import { Text } from "./Text";
+import { Easing } from "react-native-reanimated";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "error";
 
@@ -39,9 +40,9 @@ export const Button: React.FC<Props> = ({
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        { scale: interpolate(pressed.value, [0, 1], [1, 0.96]) },
+        { scale: interpolate(pressed.value, [0, 1], [1, 0.98]) },
       ],
-      opacity: interpolate(pressed.value, [0, 1], [1, 0.9]),
+      opacity: interpolate(pressed.value, [0, 1], [1, 0.95]),
     };
   });
 
@@ -49,7 +50,7 @@ export const Button: React.FC<Props> = ({
     switch (variant) {
       case "primary":
         return {
-          colors: isDark ? [colors.primary, colors.secondary] : [colors.primary, colors.secondary],
+          colors: [colors.primary, colors.primaryContainer],
           text: colors.onPrimary,
         };
       case "secondary":
@@ -100,8 +101,12 @@ export const Button: React.FC<Props> = ({
     <AnimatedPressable
       onPress={onPress}
       disabled={disabled || loading}
-      onPressIn={() => (pressed.value = withSpring(1))}
-      onPressOut={() => (pressed.value = withSpring(0))}
+      onPressIn={() => {
+        pressed.value = withTiming(1, { duration: 150, easing: Easing.bezier(0.4, 0, 0.2, 1) });
+      }}
+      onPressOut={() => {
+        pressed.value = withTiming(0, { duration: 150, easing: Easing.bezier(0.4, 0, 0.2, 1) });
+      }}
       style={[
         styles.container,
         {

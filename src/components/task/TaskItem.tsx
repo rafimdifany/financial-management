@@ -1,7 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, Animated as RNAnimated } from 'react-native';
+import { View, StyleSheet, Pressable, Text as RNText } from 'react-native';
 import { Swipeable, RectButton } from 'react-native-gesture-handler';
+import Animated, { 
+  useAnimatedStyle, 
+  useSharedValue, 
+  withTiming, 
+  interpolate,
+  Easing
+} from 'react-native-reanimated';
+import { Animated as RNAnimated } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
+import { Text } from '../common/Text';
 import { Task } from '../../types/task';
 import { Typography } from '../../constants/typography';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,8 +23,20 @@ interface TaskItemProps {
   onDelete: () => void;
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export const TaskItem = ({ task, onPress, onAdvance, onDelete }: TaskItemProps) => {
   const { colors, spacing, radius } = useTheme();
+  const pressed = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { scale: interpolate(pressed.value, [0, 1], [1, 0.98]) },
+      ],
+      opacity: interpolate(pressed.value, [0, 1], [1, 0.9]),
+    };
+  });
   const priorityColor =
     task.priority === 'high' ? '#dc2626' : task.priority === 'medium' ? '#d97706' : colors.primary;
   const priorityLabel =
@@ -73,19 +94,22 @@ export const TaskItem = ({ task, onPress, onAdvance, onDelete }: TaskItemProps) 
       leftThreshold={40}
       rightThreshold={40}
     >
-      <Pressable
+      <AnimatedPressable
         onPress={onPress}
-        style={({ pressed }) => [
+        onPressIn={() => {
+          pressed.value = withTiming(1, { duration: 150, easing: Easing.bezier(0.4, 0, 0.2, 1) });
+        }}
+        onPressOut={() => {
+          pressed.value = withTiming(0, { duration: 150, easing: Easing.bezier(0.4, 0, 0.2, 1) });
+        }}
+        style={[
           styles.container,
           {
             backgroundColor: colors.surfaceContainerHigh,
-            borderColor: colors.outlineVariant,
-            borderWidth: StyleSheet.hairlineWidth,
             borderRadius: radius.md,
             padding: spacing.lg,
-            opacity: pressed ? 0.9 : 1,
-            transform: [{ scale: pressed ? 0.98 : 1 }],
           },
+          animatedStyle,
         ]}
       >
         <View style={[styles.row, { gap: spacing.base }]}>
@@ -94,8 +118,7 @@ export const TaskItem = ({ task, onPress, onAdvance, onDelete }: TaskItemProps) 
               style={[
                 styles.checkbox,
                 {
-                  borderColor: task.status === 'done' ? colors.primary : colors.outlineVariant,
-                  backgroundColor: task.status === 'done' ? colors.primary : colors.surfaceContainerLow,
+                  backgroundColor: task.status === 'done' ? colors.primary : colors.surfaceVariant,
                   borderRadius: radius.sm,
                 },
               ]}
@@ -108,11 +131,12 @@ export const TaskItem = ({ task, onPress, onAdvance, onDelete }: TaskItemProps) 
           <View style={styles.content}>
             <View style={styles.priorityRow}>
               <View style={[styles.priorityDot, { backgroundColor: priorityColor }]} />
-              <Text style={[styles.priorityText, { color: priorityColor }]}>
+              <Text variant="labelSm" style={[styles.priorityText, { color: priorityColor }]}>
                 {priorityLabel}
               </Text>
             </View>
             <Text 
+              variant="titleMd"
               style={[
                 styles.title, 
                 { 
@@ -127,7 +151,7 @@ export const TaskItem = ({ task, onPress, onAdvance, onDelete }: TaskItemProps) 
             {task.due_date && (
               <View style={styles.dueDateContainer}>
                 <Ionicons name="calendar-outline" size={13} color={colors.onSurfaceVariant} />
-                <Text style={[styles.dueDate, { color: colors.onSurfaceVariant }]}>
+                <Text variant="bodySm" style={[styles.dueDate, { color: colors.onSurfaceVariant }]}>
                   {format(new Date(task.due_date), 'MMM d, yyyy')}
                 </Text>
               </View>
@@ -151,7 +175,6 @@ const styles = StyleSheet.create({
   checkbox: {
     width: 20,
     height: 20,
-    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
