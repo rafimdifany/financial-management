@@ -52,9 +52,6 @@ export const RecentTransactions = () => {
   const navigation = useNavigation<any>();
   const { recentTransactions } = useDashboardStore();
 
-  if (recentTransactions.length === 0) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
@@ -69,19 +66,25 @@ export const RecentTransactions = () => {
 
       <View>
         <Surface level={1} style={[styles.listPanel, { borderRadius: radius.xl, paddingHorizontal: spacing.base }]}>
-          {recentTransactions.slice(0, 5).map((item, index) => (
-            <View
-              key={item.id}
-              style={[
-                index > 0 && {
-                  borderTopWidth: StyleSheet.hairlineWidth,
-                  borderTopColor: colors.outlineVariant,
-                },
-              ]}
-            >
-              <TransactionItem item={item} />
+          {recentTransactions.length > 0 ? (
+            recentTransactions.slice(0, 5).map((item, index) => (
+              <View
+                key={item.id}
+                style={[
+                  index > 0 && {
+                    borderTopWidth: StyleSheet.hairlineWidth,
+                    borderTopColor: colors.outlineVariant,
+                  },
+                ]}
+              >
+                <TransactionItem item={item} />
+              </View>
+            ))
+          ) : (
+            <View style={{ paddingVertical: spacing.xl, alignItems: 'center' }}>
+              <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>Belum ada transaksi</Text>
             </View>
-          ))}
+          )}
         </Surface>
       </View>
     </View>

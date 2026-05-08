@@ -131,7 +131,7 @@ export const DataManageScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <AppTopBar title="Manajemen Data" />
+      <AppTopBar title="Manajemen Data" showBack />
       <ScrollView contentContainerStyle={{ padding: spacing.xl }}>
         
         {renderSection('Export Data', (

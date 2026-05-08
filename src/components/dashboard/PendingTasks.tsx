@@ -48,9 +48,6 @@ export const PendingTasks = () => {
   const navigation = useNavigation<any>();
   const { pendingTasks } = useDashboardStore();
 
-  if (pendingTasks.length === 0) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
@@ -65,19 +62,25 @@ export const PendingTasks = () => {
 
       <View>
         <Surface level={1} style={[styles.listPanel, { borderRadius: radius.lg, paddingHorizontal: spacing.base }]}>
-          {pendingTasks.slice(0, 3).map((item, index) => (
-            <View
-              key={item.id}
-              style={[
-                index > 0 && {
-                  borderTopWidth: StyleSheet.hairlineWidth,
-                  borderTopColor: colors.outlineVariant,
-                },
-              ]}
-            >
-              <TaskItem item={item} />
+          {pendingTasks.length > 0 ? (
+            pendingTasks.slice(0, 3).map((item, index) => (
+              <View
+                key={item.id}
+                style={[
+                  index > 0 && {
+                    borderTopWidth: StyleSheet.hairlineWidth,
+                    borderTopColor: colors.outlineVariant,
+                  },
+                ]}
+              >
+                <TaskItem item={item} />
+              </View>
+            ))
+          ) : (
+            <View style={{ paddingVertical: spacing.xl, alignItems: 'center' }}>
+              <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>Tidak ada tugas pending</Text>
             </View>
-          ))}
+          )}
         </Surface>
       </View>
     </View>

@@ -18,7 +18,17 @@ import { TransactionGroupHeader } from '../../components/transaction/Transaction
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { AppTopBar } from '../../components/common/AppTopBar';
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+import { format, subMonths, startOfMonth } from 'date-fns';
+import { id as idLocale } from 'date-fns/locale';
+
+const MONTH_OPTIONS = Array.from({ length: 7 }, (_, i) => {
+  const date = subMonths(new Date(), i);
+  return {
+    label: format(date, 'MMM', { locale: idLocale }),
+    value: format(date, 'yyyy-MM'),
+    isCurrent: i === 0
+  };
+}).reverse();
 
 export const TransactionListScreen = () => {
   const { colors, spacing, radius } = useTheme();
@@ -163,6 +173,8 @@ export const TransactionListScreen = () => {
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
           stickySectionHeadersEnabled={true}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
           contentInsetAdjustmentBehavior="never"
           contentContainerStyle={[
             styles.listContent, 
@@ -178,11 +190,11 @@ export const TransactionListScreen = () => {
               <View style={{ marginBottom: spacing.lg }}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <View style={[styles.monthRow, { gap: spacing.sm }]}>
-                    {MONTHS.map((month) => {
-                      const active = month === 'May';
+                    {MONTH_OPTIONS.map((month) => {
+                      const active = month.isCurrent;
                       return (
                         <TouchableOpacity
-                          key={month}
+                          key={month.value}
                           style={[
                             styles.monthChip,
                             {
@@ -192,7 +204,7 @@ export const TransactionListScreen = () => {
                           ]}
                         >
                           <Text variant="labelLg" style={{ color: active ? colors.onPrimary : colors.onSurfaceVariant }}>
-                            {month}
+                            {month.label}
                           </Text>
                         </TouchableOpacity>
                       );

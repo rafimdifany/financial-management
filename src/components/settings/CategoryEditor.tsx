@@ -7,6 +7,8 @@ import { ColorPicker } from './ColorPicker';
 import { IconPicker } from './IconPicker';
 import { Ionicons } from '@expo/vector-icons';
 
+import { Button } from '../common/Button';
+
 interface CategoryEditorProps {
   category?: Category;
   initialType: 'expense' | 'income';
@@ -109,23 +111,12 @@ export const CategoryEditor = ({ category, initialType, onSave, onClose }: Categ
         <Text style={[styles.label, { color: colors.onSurfaceVariant, marginTop: spacing.xl }]}>IKON</Text>
         <IconPicker selectedIcon={icon} onSelect={setIcon} color={color} />
 
-        <TouchableOpacity
+        <Button
+          title={isSubmitting ? 'Menyimpan...' : 'Simpan Kategori'}
           onPress={handleSave}
-          disabled={isSubmitting}
-          style={[
-            styles.saveButton,
-            { 
-              backgroundColor: colors.primary, 
-              borderRadius: radius.full,
-              marginTop: spacing.xxl,
-              opacity: isSubmitting ? 0.7 : 1,
-            }
-          ]}
-        >
-          <Text style={[styles.saveButtonText, { color: colors.onPrimary }]}>
-            {isSubmitting ? 'Menyimpan...' : 'Simpan Kategori'}
-          </Text>
-        </TouchableOpacity>
+          loading={isSubmitting}
+          style={{ marginTop: spacing.xxl }}
+        />
       </ScrollView>
     </View>
   );
