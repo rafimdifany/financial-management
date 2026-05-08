@@ -67,16 +67,19 @@ export const GoalProgress = () => {
   const { spacing } = useTheme();
   const { goals } = useDashboardStore();
 
-  if (goals.length === 0) {
-    return null;
-  }
 
   return (
     <View>
       <View style={{ marginBottom: spacing.base }}>
         <SectionHeader title="Savings Goal" actionLabel="View Details" onActionPress={() => {}} />
       </View>
-      <GoalCard item={goals[0]} />
+      {goals.length > 0 ? (
+        <GoalCard item={goals[0]} />
+      ) : (
+        <Surface level={1} style={{ padding: spacing.xl, borderRadius: radius.xl, alignItems: 'center' }}>
+          <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>Belum ada target tabungan</Text>
+        </Surface>
+      )}
     </View>
   );
 };

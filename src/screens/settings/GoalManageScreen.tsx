@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { GoalEditor } from '../../components/settings/GoalEditor';
 import { Goal, CreateGoal, UpdateGoal } from '../../types/goal';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
+import { AppTopBar } from '../../components/common/AppTopBar';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 export const GoalManageScreen = () => {
@@ -74,7 +75,7 @@ export const GoalManageScreen = () => {
               <Ionicons name={goalIcon as any} size={24} color={goalColor} />
             </View>
             <View>
-              <Text style={[styles.goalName, { color: colors.onSurface }]}>{item.name}</Text>
+              <Text style={[styles.goalName, { color: colors.onSurface }]} numberOfLines={1}>{item.name}</Text>
               {item.deadline && (
                 <Text style={[styles.deadline, { color: colors.onSurfaceVariant }]}>
                   Hingga {new Date(item.deadline).toLocaleDateString('id-ID')}
@@ -105,15 +106,15 @@ export const GoalManageScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <View style={[styles.screenHeader, { paddingTop: 60, paddingHorizontal: spacing.xl }]}>
-        <Text style={[styles.title, { color: colors.onSurface }]}>Target Menabung</Text>
-      </View>
+      <AppTopBar title="Target Menabung" showBack />
 
       <FlatList
         data={goals}
         renderItem={renderGoalItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingHorizontal: spacing.xl, paddingBottom: 100 }}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Ionicons name="trophy-outline" size={64} color={colors.outline} />

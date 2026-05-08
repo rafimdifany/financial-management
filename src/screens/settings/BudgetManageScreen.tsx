@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Category } from '../../types/category';
 import { BudgetPeriod } from '../../types/budget';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { AppTopBar } from '../../components/common/AppTopBar';
 
 export const BudgetManageScreen = () => {
   const { colors, spacing, radius } = useTheme();
@@ -50,7 +51,7 @@ export const BudgetManageScreen = () => {
           <View style={[styles.iconBox, { backgroundColor: `${categoryColor}18`, borderRadius: radius.md }]}>
             <Ionicons name={(item.icon || 'wallet-outline') as any} size={20} color={categoryColor} />
           </View>
-          <Text style={[styles.categoryName, { color: colors.onSurface }]}>{item.name}</Text>
+          <Text style={[styles.categoryName, { color: colors.onSurface }]} numberOfLines={1}>{item.name}</Text>
         </View>
 
         <View style={styles.amountContainer}>
@@ -93,9 +94,7 @@ export const BudgetManageScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <View style={[styles.header, { paddingTop: 60, paddingHorizontal: spacing.xl }]}>
-        <Text style={[styles.title, { color: colors.onSurface }]}>Anggaran</Text>
-      </View>
+      <AppTopBar title="Anggaran" showBack />
 
       <View style={[styles.periodContainer, { paddingHorizontal: spacing.xl, marginBottom: spacing.lg }]}>
         {periods.map((p) => (
@@ -122,6 +121,8 @@ export const BudgetManageScreen = () => {
         renderItem={renderBudgetItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingHorizontal: spacing.xl, paddingBottom: 40 }}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={{ color: colors.outline }}>Belum ada kategori pengeluaran</Text>

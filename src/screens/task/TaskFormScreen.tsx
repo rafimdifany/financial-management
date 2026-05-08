@@ -42,6 +42,7 @@ export const TaskFormScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSaving, setIsSaving] = useState(false);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -52,7 +53,8 @@ export const TaskFormScreen = () => {
   };
 
   const handleSave = async () => {
-    if (!validate()) return;
+    if (!validate() || isSaving) return;
+    setIsSaving(true);
 
     const payload = {
       title: title.trim(),
@@ -69,6 +71,8 @@ export const TaskFormScreen = () => {
       navigation.goBack();
     } catch (error) {
       Alert.alert('Error', 'Gagal menyimpan tugas');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -157,6 +161,7 @@ export const TaskFormScreen = () => {
           <Button 
             title={isEdit ? "Simpan Perubahan" : "Buat Tugas"} 
             onPress={handleSave} 
+            loading={isSaving}
           />
           
           {isEdit && (

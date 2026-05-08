@@ -8,6 +8,8 @@ import { IconPicker } from './IconPicker';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+import { Button } from '../common/Button';
+
 interface GoalEditorProps {
   goal?: Goal;
   onSave: (data: CreateGoal | UpdateGoal) => Promise<void>;
@@ -136,15 +138,12 @@ export const GoalEditor = ({ goal, onSave, onClose }: GoalEditorProps) => {
         <Text style={[styles.label, { color: colors.onSurfaceVariant, marginTop: spacing.xl }]}>IKON</Text>
         <IconPicker selectedIcon={icon} onSelect={setIcon} color={color} />
 
-        <TouchableOpacity
+        <Button
+          title={isSubmitting ? 'Menyimpan...' : 'Simpan Target'}
           onPress={handleSave}
-          disabled={isSubmitting}
-          style={[styles.saveButton, { backgroundColor: colors.primary, borderRadius: radius.md, marginTop: spacing.xxl, opacity: isSubmitting ? 0.7 : 1 }]}
-        >
-          <Text style={[styles.saveButtonText, { color: colors.onPrimary }]}>
-            {isSubmitting ? 'Menyimpan...' : 'Simpan Target'}
-          </Text>
-        </TouchableOpacity>
+          loading={isSubmitting}
+          style={{ marginTop: spacing.xxl }}
+        />
       </ScrollView>
     </View>
   );

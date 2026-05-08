@@ -88,6 +88,8 @@ export const DashboardScreen = () => {
       <AppTopBar />
       <ScrollView 
         style={styles.container}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior="never"
         contentContainerStyle={[
           styles.content, 

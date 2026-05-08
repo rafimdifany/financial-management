@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CategoryEditor } from '../../components/settings/CategoryEditor';
 import { Category, CreateCategory, UpdateCategory } from '../../types/category';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
+import { AppTopBar } from '../../components/common/AppTopBar';
 
 export const CategoryManageScreen = () => {
   const { colors, spacing, radius } = useTheme();
@@ -78,7 +79,7 @@ export const CategoryManageScreen = () => {
         <View style={[styles.iconBox, { backgroundColor: `${categoryColor}18`, borderRadius: radius.md }]}>
           <Ionicons name={(item.icon || 'wallet-outline') as any} size={20} color={categoryColor} />
         </View>
-        <Text style={[styles.categoryName, { color: colors.onSurface }]}>{item.name}</Text>
+        <Text style={[styles.categoryName, { color: colors.onSurface }]} numberOfLines={1}>{item.name}</Text>
         {item.is_default === 1 && (
           <View style={[styles.defaultBadge, { backgroundColor: colors.surfaceContainerHigh }]}>
             <Text style={[styles.defaultText, { color: colors.onSurfaceVariant }]}>Default</Text>
@@ -104,9 +105,7 @@ export const CategoryManageScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <View style={[styles.header, { paddingTop: 60, paddingHorizontal: spacing.xl }]}>
-        <Text style={[styles.title, { color: colors.onSurface }]}>Kategori</Text>
-      </View>
+      <AppTopBar title="Kategori" showBack />
 
       <View style={[styles.tabContainer, { paddingHorizontal: spacing.xl, marginBottom: spacing.lg }]}>
         <TouchableOpacity 
@@ -134,6 +133,8 @@ export const CategoryManageScreen = () => {
         renderItem={renderCategoryItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingHorizontal: spacing.xl, paddingBottom: 100 }}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={{ color: colors.outline }}>Belum ada kategori kustom</Text>

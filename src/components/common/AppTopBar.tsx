@@ -2,12 +2,20 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "../../hooks/useTheme";
 import { Text } from "./Text";
 
-export const AppTopBar = () => {
+interface Props {
+  title?: string;
+  showBack?: boolean;
+}
+
+export const AppTopBar: React.FC<Props> = ({ title, showBack = false }) => {
   const { colors, spacing, radius } = useTheme();
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   return (
     <View
@@ -23,26 +31,37 @@ export const AppTopBar = () => {
       ]}
     >
       <View style={styles.brandGroup}>
-        <View
-          style={[
-            styles.avatar,
-            {
-              backgroundColor: colors.primaryContainer,
-              borderRadius: radius.full,
-            },
-          ]}
-        >
-          <Text variant="labelSm" style={{ color: colors.primary, fontWeight: "800" }}>
-            FS
-          </Text>
-        </View>
-        <Text variant="titleLg" style={{ color: colors.primary }}>
-          Financial Sanctuary
+        {showBack ? (
+          <TouchableOpacity 
+            onPress={() => navigation.goBack()}
+            style={[styles.backButton, { marginRight: spacing.sm }]}
+          >
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={[
+              styles.avatar,
+              {
+                backgroundColor: colors.primaryContainer,
+                borderRadius: radius.full,
+              },
+            ]}
+          >
+            <Text variant="labelSm" style={{ color: colors.primary, fontWeight: "800" }}>
+              FS
+            </Text>
+          </View>
+        )}
+        <Text variant={showBack ? "titleMd" : "titleLg"} style={{ color: colors.primary }}>
+          {title || "Financial Sanctuary"}
         </Text>
       </View>
-      <View style={[styles.iconButton, { borderRadius: radius.full }]}>
-        <Ionicons name="notifications-outline" size={20} color={colors.onSurfaceVariant} />
-      </View>
+      {!showBack && (
+        <View style={[styles.iconButton, { borderRadius: radius.full }]}>
+          <Ionicons name="notifications-outline" size={20} color={colors.onSurfaceVariant} />
+        </View>
+      )}
     </View>
   );
 };
@@ -67,6 +86,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   iconButton: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  backButton: {
     width: 40,
     height: 40,
     alignItems: "center",

@@ -53,6 +53,7 @@ export const TransactionFormScreen = () => {
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSaving, setIsSaving] = useState(false);
 
   const formatCurrency = (val: string) => {
     const numericValue = val.replace(/[^0-9]/g, '');
@@ -82,7 +83,8 @@ export const TransactionFormScreen = () => {
   };
 
   const handleSave = async () => {
-    if (!validate()) return;
+    if (!validate() || isSaving) return;
+    setIsSaving(true);
 
     const numericAmount = parseInt(amount.replace(/[^0-9]/g, ''));
     const payload = {
@@ -102,6 +104,8 @@ export const TransactionFormScreen = () => {
       navigation.goBack();
     } catch (error) {
       Alert.alert('Error', 'Gagal menyimpan transaksi');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -223,6 +227,7 @@ export const TransactionFormScreen = () => {
           <Button 
             title="Simpan Transaksi" 
             onPress={handleSave} 
+            loading={isSaving}
           />
           
           {mode === 'edit' && (

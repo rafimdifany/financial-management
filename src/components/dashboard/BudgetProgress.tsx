@@ -80,25 +80,28 @@ export const BudgetProgress = () => {
   const CARD_WIDTH = Math.min(SCREEN_WIDTH * 0.76, 340);
   const { budgetProgress } = useDashboardStore();
 
-  if (budgetProgress.length === 0) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
       <View style={{ marginBottom: spacing.base }}>
         <SectionHeader title="Budget" caption="Pantau kategori yang mulai mendekati batas." />
       </View>
-      <FlatList
-        data={budgetProgress}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <BudgetCard item={item} cardWidth={CARD_WIDTH} />}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingRight: spacing.xl }}
-        snapToInterval={CARD_WIDTH + spacing.base}
-        decelerationRate="fast"
-      />
+      {budgetProgress.length > 0 ? (
+        <FlatList
+          data={budgetProgress}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <BudgetCard item={item} cardWidth={CARD_WIDTH} />}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingRight: spacing.xl }}
+          snapToInterval={CARD_WIDTH + spacing.base}
+          decelerationRate="fast"
+        />
+      ) : (
+        <Surface level={1} style={{ padding: spacing.xl, borderRadius: radius.xl, alignItems: 'center' }}>
+          <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>Belum ada anggaran bulanan</Text>
+        </Surface>
+      )}
     </View>
   );
 };

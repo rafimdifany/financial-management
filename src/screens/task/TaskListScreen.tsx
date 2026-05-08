@@ -113,6 +113,8 @@ export const TaskListScreen = () => {
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id.toString()}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior="never"
         renderItem={({ item }) => (
           <TaskItem
