@@ -159,7 +159,7 @@ export const TaskItem = ({ task, onPress, onAdvance, onDelete }: TaskItemProps) 
           </View>
           <Ionicons name="ellipsis-vertical" size={18} color={colors.onSurfaceVariant} />
         </View>
-      </Pressable>
+      </AnimatedPressable>
     </Swipeable>
   );
 };
