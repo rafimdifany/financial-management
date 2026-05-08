@@ -11,6 +11,7 @@ interface GoalState {
   updateGoal: (id: number, data: UpdateGoal) => Promise<void>;
   updateAmount: (id: number, amount: number) => Promise<void>;
   deleteGoal: (id: number) => Promise<void>;
+  reset: () => void;
 }
 
 export const useGoalStore = create<GoalState>((set, get) => ({
@@ -76,5 +77,12 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
-  }
+  },
+
+  reset: () => {
+    set({
+      goals: [],
+      isLoading: false,
+    });
+  },
 }));

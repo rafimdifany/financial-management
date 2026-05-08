@@ -184,4 +184,14 @@ export const transactionRepository = {
       balance: income - expense,
     };
   },
+
+  async getAllForExport(): Promise<TransactionWithCategory[]> {
+    const db = await getDatabase();
+    return await db.getAllAsync<TransactionWithCategory>(
+      `SELECT t.*, c.name as category_name, c.icon as category_icon, c.color as category_color 
+       FROM transactions t 
+       LEFT JOIN categories c ON t.category_id = c.id 
+       ORDER BY t.date DESC, t.id DESC`
+    );
+  },
 };
