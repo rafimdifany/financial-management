@@ -17,6 +17,7 @@ import { TransactionSummary } from '../../components/transaction/TransactionSumm
 import { TransactionGroupHeader } from '../../components/transaction/TransactionGroup';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { AppTopBar } from '../../components/common/AppTopBar';
+import { FloatingActionButton } from '../../components/common/FloatingActionButton';
 
 import { format, subMonths, startOfMonth } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
@@ -240,19 +241,12 @@ export const TransactionListScreen = () => {
           }
         />
 
-        <TouchableOpacity 
-          style={[
-            styles.fab, 
-            { 
-              backgroundColor: colors.primary, 
-              bottom: insets.bottom + 88,
-              right: spacing.lg 
-            }
-          ]}
+        <FloatingActionButton 
           onPress={() => navigation.navigate('TransactionForm', { mode: 'create' })}
+          style={{ bottom: insets.bottom + 88, right: spacing.lg }}
         >
           <MaterialCommunityIcons name="plus" size={24} color={colors.onPrimary} />
-        </TouchableOpacity>
+        </FloatingActionButton>
 
         <ConfirmModal 
           visible={deleteModalVisible}
@@ -309,20 +303,6 @@ const styles = StyleSheet.create({
   footer: {
     paddingVertical: 20,
     alignItems: 'center',
-  },
-  fab: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    zIndex: 10,
   },
   monthRow: {
     flexDirection: 'row',

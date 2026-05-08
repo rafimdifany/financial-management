@@ -70,12 +70,6 @@ export const RecentTransactions = () => {
             recentTransactions.slice(0, 5).map((item, index) => (
               <View
                 key={item.id}
-                style={[
-                  index > 0 && {
-                    borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: colors.outlineVariant,
-                  },
-                ]}
               >
                 <TransactionItem item={item} />
               </View>

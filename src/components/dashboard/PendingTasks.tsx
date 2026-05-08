@@ -66,12 +66,6 @@ export const PendingTasks = () => {
             pendingTasks.slice(0, 3).map((item, index) => (
               <View
                 key={item.id}
-                style={[
-                  index > 0 && {
-                    borderTopWidth: StyleSheet.hairlineWidth,
-                    borderTopColor: colors.outlineVariant,
-                  },
-                ]}
               >
                 <TaskItem item={item} />
               </View>

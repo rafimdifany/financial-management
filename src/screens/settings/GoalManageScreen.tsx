@@ -9,6 +9,8 @@ import { Goal, CreateGoal, UpdateGoal } from '../../types/goal';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
 import { AppTopBar } from '../../components/common/AppTopBar';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { EmptyState } from '../../components/common/EmptyState';
+import { FloatingActionButton } from '../../components/common/FloatingActionButton';
 
 export const GoalManageScreen = () => {
   const { colors, spacing, radius } = useTheme();
@@ -116,19 +118,23 @@ export const GoalManageScreen = () => {
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <Ionicons name="trophy-outline" size={64} color={colors.outline} />
-            <Text style={{ color: colors.outline, marginTop: 16 }}>Belum ada target menabung</Text>
-          </View>
+          <EmptyState
+            title="Belum ada target"
+            message="Buat target menabung pertamamu untuk memotivasi diri!"
+            icon="trophy-outline"
+            actionTitle="Buat Target"
+            onAction={handleAdd}
+            style={{ marginTop: 60 }}
+          />
         }
       />
 
-      <TouchableOpacity
+      <FloatingActionButton
         onPress={handleAdd}
-        style={[styles.fab, { backgroundColor: colors.primary, bottom: spacing.xl, right: spacing.xl, borderRadius: radius.full }]}
+        style={{ bottom: spacing.xl, right: spacing.xl }}
       >
         <Ionicons name="add" size={32} color={colors.onPrimary} />
-      </TouchableOpacity>
+      </FloatingActionButton>
 
       <Modal visible={editorVisible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setEditorVisible(false)}>
         <GoalEditor goal={editingGoal} onSave={handleSave} onClose={() => setEditorVisible(false)} />
@@ -163,6 +169,4 @@ const styles = StyleSheet.create({
   progressTextContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 },
   progressAmount: { fontSize: 14, fontFamily: Typography.fontFamily.semiBold },
   percentageText: { fontSize: 14, fontFamily: Typography.fontFamily.bold },
-  fab: { position: 'absolute', width: 64, height: 64, alignItems: 'center', justifyContent: 'center', elevation: 4 },
-  emptyState: { alignItems: 'center', marginTop: 60 },
 });

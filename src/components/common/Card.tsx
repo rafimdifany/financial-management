@@ -3,8 +3,9 @@ import { ViewStyle, StyleSheet, Pressable, StyleProp } from "react-native";
 import Animated, { 
   useAnimatedStyle, 
   useSharedValue, 
-  withSpring, 
-  interpolate 
+  withTiming, 
+  interpolate,
+  Easing
 } from "react-native-reanimated";
 import { useTheme } from "../../hooks/useTheme";
 import { Surface } from "./Surface";
@@ -41,7 +42,7 @@ export const Card: React.FC<Props> = ({
       style={[
         styles.card,
         {
-          padding: spacing.lg,
+          padding: spacing.xl,
           borderRadius: radius.lg,
         },
         style,
@@ -55,8 +56,12 @@ export const Card: React.FC<Props> = ({
     return (
       <AnimatedPressable
         onPress={onPress}
-        onPressIn={() => (pressed.value = withSpring(1))}
-        onPressOut={() => (pressed.value = withSpring(0))}
+        onPressIn={() => {
+          pressed.value = withTiming(1, { duration: 150, easing: Easing.bezier(0.4, 0, 0.2, 1) });
+        }}
+        onPressOut={() => {
+          pressed.value = withTiming(0, { duration: 150, easing: Easing.bezier(0.4, 0, 0.2, 1) });
+        }}
         style={animatedStyle}
       >
         {content}
