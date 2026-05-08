@@ -13,6 +13,7 @@ interface CategoryState {
   addCategory: (category: CreateCategory) => Promise<void>;
   updateCategory: (id: number, category: UpdateCategory) => Promise<void>;
   deleteCategory: (id: number) => Promise<void>;
+  reset: () => void;
 }
 
 export const useCategoryStore = create<CategoryState>((set, get) => ({
@@ -74,5 +75,14 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  reset: () => {
+    set({
+      categories: [],
+      expenseCategories: [],
+      incomeCategories: [],
+      isLoading: false,
+    });
   },
 }));

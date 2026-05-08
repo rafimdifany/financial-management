@@ -9,6 +9,7 @@ interface BudgetState {
   fetchBudgets: () => Promise<void>;
   setBudget: (categoryId: number, amount: number, period: BudgetPeriod) => Promise<void>;
   deleteBudget: (id: number) => Promise<void>;
+  reset: () => void;
 }
 
 export const useBudgetStore = create<BudgetState>((set, get) => ({
@@ -60,5 +61,12 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
-  }
+  },
+
+  reset: () => {
+    set({
+      budgets: [],
+      isLoading: false,
+    });
+  },
 }));

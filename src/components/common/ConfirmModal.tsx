@@ -14,6 +14,8 @@ interface Props {
   onConfirm: () => void;
   onCancel: () => void;
   isDestructive?: boolean;
+  confirmDisabled?: boolean;
+  children?: React.ReactNode;
 }
 
 export const ConfirmModal: React.FC<Props> = ({
@@ -25,6 +27,8 @@ export const ConfirmModal: React.FC<Props> = ({
   onConfirm,
   onCancel,
   isDestructive = false,
+  confirmDisabled = false,
+  children,
 }) => {
   const { colors, spacing } = useTheme();
 
@@ -49,7 +53,8 @@ export const ConfirmModal: React.FC<Props> = ({
                 >
                   {message}
                 </Text>
-                <View style={styles.actions}>
+                {children}
+                <View style={[styles.actions, { marginTop: children ? spacing.xl : 0 }]}>
                   <Button 
                     title={cancelLabel} 
                     onPress={onCancel} 
@@ -61,6 +66,7 @@ export const ConfirmModal: React.FC<Props> = ({
                     onPress={onConfirm} 
                     variant={isDestructive ? "error" : "primary"} 
                     style={{ flex: 1 }}
+                    disabled={confirmDisabled}
                   />
                 </View>
               </Card>

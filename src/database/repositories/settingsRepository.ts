@@ -1,4 +1,5 @@
 import { getDatabase } from '../database';
+import { seedCategories, seedSettings } from '../seed';
 import { AppSettings, AppTheme } from '../../types/settings';
 
 export const settingsRepository = {
@@ -36,8 +37,11 @@ export const settingsRepository = {
       await db.runAsync('DELETE FROM tasks');
       await db.runAsync('DELETE FROM goals');
       await db.runAsync('DELETE FROM budgets');
-      // We don't delete categories as they are seeded and required
-      // We don't delete settings as they define the app state
+      await db.runAsync('DELETE FROM categories');
+      await db.runAsync('DELETE FROM settings');
+      
+      await seedCategories(db);
+      await seedSettings(db);
     });
   }
 };

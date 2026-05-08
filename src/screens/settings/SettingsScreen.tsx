@@ -18,24 +18,12 @@ export const SettingsScreen = () => {
   const { 
     currency, 
     fetchSettings, 
-    resetAllData 
   } = useSettingsStore();
-
-  const [resetModalVisible, setResetModalVisible] = React.useState(false);
 
   useEffect(() => {
     fetchSettings();
   }, []);
 
-  const handleResetData = async () => {
-    try {
-      await resetAllData();
-      setResetModalVisible(false);
-      Alert.alert('Berhasil', 'Semua data telah dihapus');
-    } catch (error) {
-      Alert.alert('Error', 'Gagal menghapus data');
-    }
-  };
 
   const renderSection = (eyebrow: string, title: string, children: React.ReactNode, danger = false) => (
     <View style={styles.section}>
@@ -158,7 +146,7 @@ export const SettingsScreen = () => {
             label="Clear All History" 
             icon="trash-outline"
             destructive
-            onPress={() => setResetModalVisible(true)}
+            onPress={() => navigation.navigate('DataManage')}
           />
         </>
       ), true)}
@@ -167,14 +155,6 @@ export const SettingsScreen = () => {
         FINANCIAL SANCTUARY V{appJson.expo.version}
       </Text>
 
-        <ConfirmModal
-          visible={resetModalVisible}
-          title="Hapus Semua Data"
-          message="Apakah Anda yakin ingin menghapus semua data? Tindakan ini akan menghapus semua transaksi, tugas, target, dan anggaran. Kategori default tidak akan dihapus."
-          onConfirm={handleResetData}
-          onCancel={() => setResetModalVisible(false)}
-          isDestructive={true}
-        />
       </ScrollView>
     </View>
   );

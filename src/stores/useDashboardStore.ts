@@ -18,6 +18,7 @@ interface DashboardState {
 
   fetchAll: () => Promise<void>;
   refreshSummary: () => Promise<void>;
+  reset: () => void;
 }
 
 export const useDashboardStore = create<DashboardState>((set) => ({
@@ -71,5 +72,19 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     } catch (error) {
       console.error("Failed to refresh summary:", error);
     }
+  },
+
+  reset: () => {
+    set({
+      balance: 0,
+      income: 0,
+      expense: 0,
+      budgetProgress: [],
+      goals: [],
+      recentTransactions: [],
+      pendingTasks: [],
+      isLoading: false,
+      error: null,
+    });
   },
 }));
