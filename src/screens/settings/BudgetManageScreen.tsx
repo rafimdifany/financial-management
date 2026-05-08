@@ -24,13 +24,28 @@ export const BudgetManageScreen = () => {
     fetchBudgets();
   }, []);
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleSetBudget = async (categoryId: number, value: string) => {
+    if (isSaving) return;
+    
     const amount = parseFloat(value.replace(/[^0-9.]/g, '')) || 0;
+    
+    // Check if value actually changed to avoid redundant DB calls
+    const currentBudget = budgets.find(b => b.category_id === categoryId && b.period === period);
+    if (currentBudget && currentBudget.amount === amount) {
+      setEditingId(null);
+      return;
+    }
+
+    setIsSaving(true);
     try {
       await setBudget(categoryId, amount, period);
       setEditingId(null);
     } catch (error) {
       console.error('Failed to set budget:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 

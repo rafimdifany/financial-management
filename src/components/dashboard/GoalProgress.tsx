@@ -64,7 +64,7 @@ const GoalCard = ({ item }: { item: Goal }) => {
 };
 
 export const GoalProgress = () => {
-  const { spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
   const { goals } = useDashboardStore();
 
 

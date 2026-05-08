@@ -38,7 +38,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
         onPress={onPress}
         style={{ marginBottom: spacing.base }}
       >
-        <Card level={1} style={styles.card}>
+        <Card level={1} style={[styles.card, { padding: spacing.xl }]}>
           <View style={styles.row}>
             <CategoryIcon 
               icon={transaction.category_icon || 'cash'} 
@@ -78,7 +78,7 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
 
 const styles = StyleSheet.create({
   card: {
-    padding: spacing.xl,
+    // padding moved to inline style to use theme spacing
   },
   row: {
     flexDirection: 'row',

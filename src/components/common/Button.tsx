@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, ViewStyle, TextStyle, ActivityIndicator, View } 
 import Animated, { 
   useAnimatedStyle, 
   useSharedValue, 
+  withTiming, 
   withSpring, 
   interpolate 
 } from "react-native-reanimated";

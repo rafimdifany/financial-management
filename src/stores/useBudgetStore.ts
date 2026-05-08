@@ -31,14 +31,13 @@ export const useBudgetStore = create<BudgetState>((set, get) => ({
   setBudget: async (categoryId, amount, period) => {
     set({ isLoading: true });
     try {
-      const existing = await budgetRepository.getByCategory(categoryId);
-      if (existing) {
-        if (amount === 0) {
+      if (amount === 0) {
+        const existing = await budgetRepository.getByCategory(categoryId);
+        if (existing) {
           await budgetRepository.delete(existing.id);
-        } else {
-          await budgetRepository.update(existing.id, { amount, period });
         }
-      } else if (amount > 0) {
+      } else {
+        // Repository now uses INSERT OR REPLACE (UPSERT)
         await budgetRepository.create({ category_id: categoryId, amount, period });
       }
       await get().fetchBudgets();
