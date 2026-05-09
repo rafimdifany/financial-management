@@ -39,16 +39,21 @@ export const FloatingActionButton: React.FC<Props> = ({ onPress, children, style
       onPressOut={() => {
         pressed.value = withTiming(0, { duration: 200, easing: Easing.bezier(0.4, 0, 0.2, 1) });
       }}
-      style={[styles.fabWrapper, animatedStyle, style]}
+      style={[
+        styles.fabWrapper, 
+        isDark && { shadowOpacity: 0, elevation: 0 },
+        animatedStyle, 
+        style
+      ]}
     >
       <LinearGradient
-        colors={isDark ? [colors.primary, colors.primaryContainer] : ["#006b5f", "#14b8a6"]}
+        colors={isDark ? [colors.primary, colors.primaryFixedDim] : ["#006b5f", "#14b8a6"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[
           styles.fab,
           {
-            borderRadius: radius.full,
+            borderRadius: 18, // Squircle shape
             width: 56,
             height: 56,
           }
@@ -65,9 +70,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 4,
   },
   fab: {
     justifyContent: 'center',
