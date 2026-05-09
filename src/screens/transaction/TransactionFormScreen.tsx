@@ -184,7 +184,7 @@ export const TransactionFormScreen = () => {
         <TouchableOpacity 
           style={[
             styles.fieldTrigger, 
-            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg }
+            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg, marginBottom: spacing.md }
           ]}
           onPress={() => setShowCategoryPicker(true)}
         >
@@ -197,14 +197,14 @@ export const TransactionFormScreen = () => {
           <MaterialCommunityIcons name="chevron-right" size={24} color={colors.outline} />
         </TouchableOpacity>
         {errors.category && (
-          <Text variant="labelSm" style={{ color: colors.error, marginTop: -16, marginBottom: 24, marginLeft: spacing.base }}>{errors.category}</Text>
+          <Text variant="labelSm" style={{ color: colors.error, marginBottom: spacing.md, marginLeft: spacing.base }}>{errors.category}</Text>
         )}
 
         {/* Date Picker Trigger */}
         <TouchableOpacity 
           style={[
             styles.fieldTrigger, 
-            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg, marginTop: errors.category ? 0 : spacing.base }
+            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg, marginBottom: spacing.md }
           ]}
           onPress={() => setShowDatePicker(true)}
         >
@@ -325,6 +325,5 @@ const styles = StyleSheet.create({
   fieldTrigger: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
   },
 });
