@@ -11,10 +11,10 @@ export function groupByDate(transactions: TransactionWithCategory[]): Transactio
   
   transactions.forEach(tx => {
     const date = parseISO(tx.date);
-    let title = format(date, 'dd MMM yyyy');
+    let title = format(date, 'MMMM d, yyyy');
     
-    if (isToday(date)) title = 'Hari Ini';
-    else if (isYesterday(date)) title = 'Kemarin';
+    if (isToday(date)) title = 'Today';
+    else if (isYesterday(date)) title = 'Yesterday';
     
     if (!groups[title]) groups[title] = [];
     groups[title].push(tx);
