@@ -20,12 +20,11 @@ import { AppTopBar } from '../../components/common/AppTopBar';
 import { FloatingActionButton } from '../../components/common/FloatingActionButton';
 
 import { format, subMonths, startOfMonth } from 'date-fns';
-import { id as idLocale } from 'date-fns/locale';
 
 const MONTH_OPTIONS = Array.from({ length: 7 }, (_, i) => {
   const date = subMonths(new Date(), i);
   return {
-    label: format(date, 'MMM', { locale: idLocale }),
+    label: format(date, 'MMM'),
     value: format(date, 'yyyy-MM'),
     isCurrent: i === 0
   };
@@ -158,13 +157,13 @@ export const TransactionListScreen = () => {
             <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.searchContainer}>
               <Input 
                 autoFocus
-                placeholder="Cari transaksi..."
+                placeholder="Search transactions..."
                 value={localSearch}
                 onChangeText={handleSearch}
                 containerStyle={{ flex: 1, marginBottom: 0 }}
               />
               <TouchableOpacity onPress={toggleSearch} style={{ marginLeft: spacing.sm }}>
-                <Text variant="labelLg" style={{ color: colors.primary }}>Batal</Text>
+                <Text variant="labelLg" style={{ color: colors.primary }}>Cancel</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -218,9 +217,9 @@ export const TransactionListScreen = () => {
               </View>
               <TransactionSummary income={summary.income} expense={summary.expense} />
               <View style={[styles.filterContainer, { gap: spacing.sm }]}>
-                <FilterChip label="Semua" value="all" />
-                <FilterChip label="Pemasukan" value="income" />
-                <FilterChip label="Pengeluaran" value="expense" />
+                <FilterChip label="All" value="all" />
+                <FilterChip label="Income" value="income" />
+                <FilterChip label="Expense" value="expense" />
               </View>
             </View>
           }
@@ -236,8 +235,8 @@ export const TransactionListScreen = () => {
           ListEmptyComponent={
             !isLoading ? (
               <EmptyState 
-                title={searchQuery ? "Hasil tidak ditemukan" : "Belum ada transaksi"} 
-                message={searchQuery ? `Tidak ada transaksi dengan kata kunci "${searchQuery}"` : "Mulai catat pengeluaran dan pemasukanmu hari ini."}
+                title={searchQuery ? "No results found" : "No transactions yet"} 
+                message={searchQuery ? `No transactions found for "${searchQuery}"` : "Start tracking your income and expenses today."}
                 icon={searchQuery ? "search-outline" : "swap-vertical-outline"}
               />
             ) : null
@@ -253,9 +252,9 @@ export const TransactionListScreen = () => {
 
         <ConfirmModal 
           visible={deleteModalVisible}
-          title="Hapus Transaksi?"
-          message="Data transaksi ini akan dihapus secara permanen."
-          confirmLabel="Hapus"
+          title="Delete Transaction?"
+          message="This transaction will be permanently deleted."
+          confirmLabel="Delete"
           onConfirm={confirmDelete}
           onCancel={() => setDeleteModalVisible(false)}
           isDestructive={true}
@@ -264,6 +263,7 @@ export const TransactionListScreen = () => {
     </GestureHandlerRootView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
