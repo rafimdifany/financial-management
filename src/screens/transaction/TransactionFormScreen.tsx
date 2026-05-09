@@ -345,6 +345,13 @@ const styles = StyleSheet.create({
     fontSize: 44,
     fontWeight: '700',
     minWidth: 120,
+    height: 60,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    margin: 0,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
+    lineHeight: 52,
   },
   rowContainer: {
     flexDirection: 'row',
