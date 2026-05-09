@@ -23,14 +23,6 @@ const TabIcon = ({ name, color, focused }: { name: string; color: string; focuse
       ]}
     >
       <Ionicons name={name as any} size={22} color={color} />
-      <View
-        style={[
-          styles.indicator,
-          {
-            backgroundColor: focused ? colors.primary : "transparent",
-          }
-        ]}
-      />
     </View>
   );
 };
@@ -126,12 +118,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 32,
     borderRadius: 16,
-  },
-  indicator: {
-    // Removed indicator in favor of tonal pill
-  },
-  tabBackground: {
-    // Removed specific radius for a more integrated look
   },
 });
 
