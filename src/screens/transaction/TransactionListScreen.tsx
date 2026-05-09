@@ -122,16 +122,22 @@ export const TransactionListScreen = () => {
     return (
       <TouchableOpacity 
         onPress={() => setFilter(value)}
+        activeOpacity={0.7}
         style={[
           styles.filterChip, 
           { 
-            backgroundColor: isActive ? colors.primary : colors.surfaceContainerHighest,
+            backgroundColor: isActive ? colors.primary : colors.surfaceVariant,
+            opacity: isActive ? 1 : 0.6,
+            borderRadius: radius.full,
           }
         ]}
       >
         <Text 
           variant="labelLg" 
-          style={{ color: isActive ? colors.onPrimary : colors.onSurfaceVariant }}
+          style={{ 
+            color: isActive ? colors.onPrimary : colors.onSurfaceVariant,
+            fontWeight: isActive ? '700' : '500'
+          }}
         >
           {label}
         </Text>
@@ -293,12 +299,11 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     flexDirection: 'row',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   listContent: {
     // Moved paddingBottom to inline style to use insets
