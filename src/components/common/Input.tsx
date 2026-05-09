@@ -100,8 +100,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   label: {
-    marginBottom: 6,
+    marginBottom: 8,
     textTransform: "uppercase",
+    fontWeight: '500',
+    letterSpacing: 0.1,
   },
   inputContainer: {
     width: "100%",
