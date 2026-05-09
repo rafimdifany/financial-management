@@ -28,6 +28,7 @@ export const lightColors = {
   error: "#ba1a1a",
   errorContainer: "#ffdad6",
   onError: "#ffffff",
+  onErrorContainer: "#410002",
   onSurface: "#191c1e",
   onBackground: "#191c1e",
   onSurfaceVariant: "#3c4947",

@@ -2,12 +2,12 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { Text } from '../common/Text';
-import { Card } from '../common/Card';
-import { CategoryIcon } from '../common/CategoryIcon';
+import { Surface } from '../common/Surface';
 import { TransactionWithCategory } from '../../types/transaction';
 import { format, parseISO } from 'date-fns';
 import { Swipeable } from 'react-native-gesture-handler';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { formatCurrency } from '../../utils/formatCurrency';
 
 interface Props {
   transaction: TransactionWithCategory;
@@ -16,16 +16,26 @@ interface Props {
 }
 
 export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelete }) => {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, radius } = useTheme();
 
   const renderRightActions = () => (
     <TouchableOpacity 
-      style={[styles.deleteAction, { backgroundColor: colors.error, marginBottom: spacing.base }]}
+      style={[
+        styles.deleteAction, 
+        { 
+          backgroundColor: colors.errorContainer, 
+          borderRadius: radius.lg,
+          marginBottom: spacing.md,
+          marginLeft: spacing.base
+        }
+      ]}
       onPress={onDelete}
     >
-      <MaterialCommunityIcons name="delete" size={24} color={colors.onError} />
+      <MaterialCommunityIcons name="delete-outline" size={24} color={colors.onErrorContainer} />
     </TouchableOpacity>
   );
+
+  const isIncome = transaction.type === 'income';
 
   return (
     <Swipeable
@@ -34,72 +44,85 @@ export const TransactionItem: React.FC<Props> = ({ transaction, onPress, onDelet
       rightThreshold={40}
     >
       <TouchableOpacity 
-        activeOpacity={0.7}
+        activeOpacity={0.8}
         onPress={onPress}
-        style={{ marginBottom: spacing.base }}
+        style={{ marginBottom: spacing.md }}
       >
-        <Card level={1} style={[styles.card, { padding: spacing.xl }]}>
+        <Surface level={1} style={[styles.container, { padding: spacing.lg, borderRadius: radius.lg }]}>
           <View style={styles.row}>
-            <CategoryIcon 
-              icon={transaction.category_icon || 'cash'} 
-              color={transaction.category_color || colors.primary} 
-              size={24}
-            />
-            <View style={styles.info}>
-              <Text variant="titleMd" numberOfLines={2}>{transaction.description || transaction.category_name || 'Tanpa Kategori'}</Text>
-              {transaction.description ? (
-                <Text variant="bodySm" style={{ color: colors.onSurfaceVariant }} numberOfLines={1}>
-                  {transaction.category_name}
-                </Text>
-              ) : null}
+            <View 
+              style={[
+                styles.iconWrapper, 
+                { 
+                  backgroundColor: `${transaction.category_color || colors.primary}15`,
+                  borderRadius: radius.full 
+                }
+              ]}
+            >
+              <Ionicons 
+                name={(transaction.category_icon as any) || 'cash-outline'} 
+                size={22} 
+                color={transaction.category_color || colors.primary} 
+              />
             </View>
+            
+            <View style={styles.info}>
+              <Text variant="titleMd" style={{ color: colors.onSurface, fontWeight: '600' }} numberOfLines={1}>
+                {transaction.description || transaction.category_name || 'Untitled'}
+              </Text>
+              <Text variant="labelSm" style={{ color: colors.onSurfaceVariant, marginTop: 2 }}>
+                {transaction.category_name} • {format(parseISO(transaction.date), 'HH:mm')}
+              </Text>
+            </View>
+
             <View style={styles.amountContainer}>
               <Text 
                 variant="titleMd" 
                 numberOfLines={1}
                 style={[
                   styles.amount,
-                  { color: transaction.type === 'income' ? colors.secondary : colors.error }
+                  { color: isIncome ? colors.secondary : colors.onSurface, fontWeight: '700' }
                 ]}
               >
-                {transaction.type === 'income' ? '+ Rp ' : '- Rp '}
-                {transaction.amount.toLocaleString('id-ID')}
-              </Text>
-              <Text variant="bodySm" style={{ color: colors.onSurfaceVariant }}>
-                {format(parseISO(transaction.date), 'HH:mm')}
+                {isIncome ? '+' : '-'} {formatCurrency(transaction.amount)}
               </Text>
             </View>
           </View>
-        </Card>
+        </Surface>
       </TouchableOpacity>
     </Swipeable>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    // padding moved to inline style to use theme spacing
+  container: {
+    width: '100%',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  iconWrapper: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   info: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 16,
   },
   amountContainer: {
     alignItems: 'flex-end',
-    maxWidth: 104,
+    marginLeft: 8,
   },
   amount: {
     fontVariant: ['tabular-nums'],
   },
   deleteAction: {
-    width: 80,
+    width: 72,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
-    marginLeft: 8,
   },
 });
+

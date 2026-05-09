@@ -28,6 +28,7 @@ export const darkColors = {
   error: "#fca5a5",
   errorContainer: "#7f1d1d",
   onError: "#450a0a",
+  onErrorContainer: "#f9dada",
   onSurface: "#edf3ee",
   onBackground: "#edf3ee",
   onSurfaceVariant: "#b8c4bc",
