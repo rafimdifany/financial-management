@@ -10,10 +10,19 @@ interface Props {
 export const TransactionGroupHeader: React.FC<Props> = ({ title }) => {
   const { colors, spacing } = useTheme();
 
+  const isSpecialDate = title === 'Today' || title === 'Yesterday';
+
   return (
     <View style={[styles.header, { backgroundColor: colors.surface }]}>
-      <Text variant="labelMd" style={{ color: colors.onSurfaceVariant }}>
-        {title.toUpperCase()}
+      <Text 
+        variant="labelLg" 
+        style={{ 
+          color: isSpecialDate ? colors.primary : colors.onSurfaceVariant,
+          fontWeight: '600',
+          letterSpacing: 0.1
+        }}
+      >
+        {title}
       </Text>
     </View>
   );
@@ -21,6 +30,8 @@ export const TransactionGroupHeader: React.FC<Props> = ({ title }) => {
 
 const styles = StyleSheet.create({
   header: {
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingTop: 24,
   },
 });
+
