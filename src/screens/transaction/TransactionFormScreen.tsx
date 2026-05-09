@@ -6,7 +6,8 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  TextInput
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
@@ -166,56 +167,68 @@ export const TransactionFormScreen = () => {
 
         {/* Amount Input */}
         <View style={styles.amountContainer}>
-          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '500', letterSpacing: 0.1 }}>AMOUNT</Text>
-          <View style={styles.amountInputRow}>
-            <Text variant="headlineMd" style={{ color: colors.onSurface }}>Rp</Text>
-            <Input 
+          <Text variant="labelMd" style={[styles.centeredLabel, { color: colors.onSurfaceVariant }]}>AMOUNT</Text>
+          <View style={[styles.amountInputWrapper, { borderRadius: radius.xl }]}>
+            <Text variant="displayMd" style={{ color: colors.onSurface, marginRight: 8 }}>Rp</Text>
+            <TextInput 
               value={amount}
               onChangeText={handleAmountChange}
               keyboardType="numeric"
               placeholder="0"
-              style={styles.amountInput}
-              error={errors.amount}
+              placeholderTextColor={colors.outline}
+              style={[styles.amountInputLarge, { color: colors.onSurface }]}
             />
           </View>
+          {errors.amount && (
+            <Text variant="labelSm" style={{ color: colors.error, marginTop: 8 }}>{errors.amount}</Text>
+          )}
         </View>
 
-        {/* Category Picker Trigger */}
-        <TouchableOpacity 
-          style={[
-            styles.fieldTrigger, 
-            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg, marginBottom: spacing.md }
-          ]}
-          onPress={() => setShowCategoryPicker(true)}
-        >
-          <View style={{ flex: 1 }}>
+        {/* Side-by-side Category & Date */}
+        <View style={styles.rowContainer}>
+          {/* Category Picker Trigger */}
+          <View style={styles.halfField}>
             <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '500', letterSpacing: 0.1 }}>CATEGORY</Text>
-            <Text variant="bodyLg" style={{ color: category ? colors.onSurface : colors.outline }}>
-              {category ? category.name : 'Select Category'}
-            </Text>
+            <TouchableOpacity 
+              style={[
+                styles.fieldTrigger, 
+                { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.md }
+              ]}
+              onPress={() => setShowCategoryPicker(true)}
+            >
+              <View style={{ flex: 1 }}>
+                <Text variant="bodyMd" style={{ color: category ? colors.onSurface : colors.outline }} numberOfLines={1}>
+                  {category ? category.name : 'Select'}
+                </Text>
+              </View>
+              <MaterialCommunityIcons name="chevron-down" size={20} color={colors.outline} />
+            </TouchableOpacity>
+            {errors.category && (
+              <Text variant="labelSm" style={{ color: colors.error, marginTop: 4 }}>{errors.category}</Text>
+            )}
           </View>
-          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.outline} />
-        </TouchableOpacity>
-        {errors.category && (
-          <Text variant="labelSm" style={{ color: colors.error, marginBottom: spacing.md, marginLeft: spacing.base }}>{errors.category}</Text>
-        )}
 
-        {/* Date Picker Trigger */}
-        <TouchableOpacity 
-          style={[
-            styles.fieldTrigger, 
-            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg, marginBottom: spacing.md }
-          ]}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <View style={{ flex: 1 }}>
+          <View style={{ width: spacing.md }} />
+
+          {/* Date Picker Trigger */}
+          <View style={styles.halfField}>
             <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '500', letterSpacing: 0.1 }}>DATE</Text>
-            <Text variant="bodyLg">
-              {format(date, 'EEEE, MMMM d, yyyy')}
-            </Text>
+            <TouchableOpacity 
+              style={[
+                styles.fieldTrigger, 
+                { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.md }
+              ]}
+              onPress={() => setShowDatePicker(true)}
+            >
+              <View style={{ flex: 1 }}>
+                <Text variant="bodyMd" style={{ color: colors.onSurface }} numberOfLines={1}>
+                  {format(date, 'MMM d, yyyy')}
+                </Text>
+              </View>
+              <MaterialCommunityIcons name="calendar" size={20} color={colors.outline} />
+            </TouchableOpacity>
           </View>
-          <MaterialCommunityIcons name="calendar" size={24} color={colors.outline} />
-        </TouchableOpacity>
+        </View>
 
         {/* Note Input */}
         <View style={{ marginTop: spacing.xl }}>
@@ -312,15 +325,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   amountContainer: {
-    marginBottom: 24,
-  },
-  amountInputRow: {
-    flexDirection: 'row',
+    marginBottom: 32,
     alignItems: 'center',
   },
-  amountInput: {
+  centeredLabel: {
+    marginBottom: 16,
+    fontWeight: '500',
+    letterSpacing: 0.1,
+  },
+  amountInputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 32,
+    paddingHorizontal: 24,
+    width: '100%',
+  },
+  amountInputLarge: {
+    fontSize: 44,
+    fontWeight: '700',
+    minWidth: 120,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    marginBottom: 24,
+  },
+  halfField: {
     flex: 1,
-    marginLeft: 8,
   },
   fieldTrigger: {
     flexDirection: 'row',
