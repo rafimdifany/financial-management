@@ -21,7 +21,6 @@ import { TaskPriority, TaskStatus, Task } from '../../types/task';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
-import { id as localeId } from 'date-fns/locale';
 
 export const TaskFormScreen = () => {
   const { colors, spacing, radius } = useTheme();
@@ -46,7 +45,7 @@ export const TaskFormScreen = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!title.trim()) newErrors.title = 'Judul tugas harus diisi';
+    if (!title.trim()) newErrors.title = 'Task title is required';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -70,7 +69,7 @@ export const TaskFormScreen = () => {
       }
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Error', 'Gagal menyimpan tugas');
+      Alert.alert('Error', 'Failed to save task');
     } finally {
       setIsSaving(false);
     }
@@ -83,7 +82,7 @@ export const TaskFormScreen = () => {
       setShowDeleteConfirm(false);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Error', 'Gagal menghapus tugas');
+      Alert.alert('Error', 'Failed to delete task');
     }
   };
 
@@ -97,7 +96,7 @@ export const TaskFormScreen = () => {
           <Ionicons name="close" size={28} color={colors.onSurface} />
         </TouchableOpacity>
         <Text variant="titleLg" style={styles.headerTitle}>
-          {isEdit ? 'Ubah Tugas' : 'Tugas Baru'}
+          {isEdit ? 'Edit Task' : 'New Task'}
         </Text>
         <View style={{ width: 28 }} />
       </View>
@@ -105,25 +104,25 @@ export const TaskFormScreen = () => {
       <ScrollView contentContainerStyle={[styles.content, { padding: spacing.lg }]}>
         {isEdit && (
           <View style={styles.statusSection}>
-            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8 }}>STATUS SAAT INI</Text>
+            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8 }}>CURRENT STATUS</Text>
             <StatusBadge status={status} />
           </View>
         )}
 
         <Input
-          label="JUDUL TUGAS"
+          label="TASK TITLE"
           value={title}
           onChangeText={(val) => {
             setTitle(val);
             if (errors.title) setErrors(prev => ({ ...prev, title: '' }));
           }}
-          placeholder="Apa yang ingin Anda kerjakan?"
+          placeholder="What do you want to work on?"
           error={errors.title}
           autoFocus={!isEdit}
         />
 
         <View style={styles.section}>
-          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 12 }}>PRIORITAS</Text>
+          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 12 }}>PRIORITY</Text>
           <View style={styles.priorityRow}>
             {(['low', 'medium', 'high'] as TaskPriority[]).map((p) => (
               <Chip
@@ -138,7 +137,7 @@ export const TaskFormScreen = () => {
         </View>
 
         <View style={styles.section}>
-          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>TENGGAT WAKTU (OPSIONAL)</Text>
+          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>DUE DATE (Optional)</Text>
           <TouchableOpacity 
             style={[styles.dateTrigger, { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md }]}
             onPress={() => setShowDatePicker(true)}
@@ -146,7 +145,7 @@ export const TaskFormScreen = () => {
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
               <MaterialCommunityIcons name="calendar-clock" size={20} color={colors.primary} style={{ marginRight: 8 }} />
               <Text style={{ color: dueDate ? colors.onSurface : colors.outline }}>
-                {dueDate ? format(dueDate, 'EEEE, d MMMM yyyy', { locale: localeId }) : 'Atur tenggat waktu'}
+                {dueDate ? format(dueDate, 'EEEE, MMMM d, yyyy') : 'Set a due date'}
               </Text>
             </View>
             {dueDate && (
@@ -159,14 +158,14 @@ export const TaskFormScreen = () => {
 
         <View style={{ marginTop: spacing.xl }}>
           <Button 
-            title={isEdit ? "Simpan Perubahan" : "Buat Tugas"} 
+            title={isEdit ? "Save Changes" : "Create Task"} 
             onPress={handleSave} 
             loading={isSaving}
           />
           
           {isEdit && (
             <Button 
-              title="Hapus Tugas" 
+              title="Delete Task" 
               onPress={() => setShowDeleteConfirm(true)} 
               variant="ghost"
               style={{ marginTop: spacing.md }}
@@ -191,13 +190,14 @@ export const TaskFormScreen = () => {
 
       <ConfirmModal 
         visible={showDeleteConfirm}
-        title="Hapus Tugas"
-        message="Apakah Anda yakin ingin menghapus tugas ini? Tindakan ini tidak dapat dibatalkan."
-        confirmLabel="Hapus"
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+        confirmLabel="Delete"
         onConfirm={handleDelete}
         onCancel={() => setShowDeleteConfirm(false)}
         isDestructive
       />
+
     </KeyboardAvoidingView>
   );
 };
