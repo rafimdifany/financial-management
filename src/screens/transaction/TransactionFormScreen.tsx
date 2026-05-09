@@ -20,7 +20,6 @@ import { useTransactionStore } from '../../stores/useTransactionStore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
-import { id as localeId } from 'date-fns/locale';
 import { Category } from '../../types/category';
 
 export const TransactionFormScreen = () => {
@@ -35,7 +34,7 @@ export const TransactionFormScreen = () => {
 
   // Form States
   const [type, setType] = useState<'expense' | 'income'>(initialTransaction?.type || 'expense');
-  const [amount, setAmount] = useState(initialTransaction ? new Intl.NumberFormat('id-ID').format(initialTransaction.amount) : '');
+  const [amount, setAmount] = useState(initialTransaction ? new Intl.NumberFormat('en-US').format(initialTransaction.amount) : '');
   const [category, setCategory] = useState<Category | null>(initialTransaction ? {
     id: initialTransaction.category_id,
     name: initialTransaction.category_name,
@@ -58,7 +57,7 @@ export const TransactionFormScreen = () => {
   const formatCurrency = (val: string) => {
     const numericValue = val.replace(/[^0-9]/g, '');
     if (!numericValue) return '';
-    return new Intl.NumberFormat('id-ID').format(parseInt(numericValue));
+    return new Intl.NumberFormat('en-US').format(parseInt(numericValue));
   };
 
   const handleAmountChange = (val: string) => {
@@ -73,10 +72,10 @@ export const TransactionFormScreen = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!amount) newErrors.amount = 'Jumlah harus diisi';
+    if (!amount) newErrors.amount = 'Amount is required';
     else if (parseInt(amount.replace(/[^0-9]/g, '')) <= 0)
-      newErrors.amount = 'Jumlah harus lebih dari 0';
-    if (!category) newErrors.category = 'Kategori harus dipilih';
+      newErrors.amount = 'Amount must be greater than 0';
+    if (!category) newErrors.category = 'Category is required';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -103,7 +102,7 @@ export const TransactionFormScreen = () => {
       }
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Error', 'Gagal menyimpan transaksi');
+      Alert.alert('Error', 'Failed to save transaction');
     } finally {
       setIsSaving(false);
     }
@@ -116,7 +115,7 @@ export const TransactionFormScreen = () => {
       setShowDeleteConfirm(false);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Error', 'Gagal menghapus transaksi');
+      Alert.alert('Error', 'Failed to delete transaction');
     }
   };
 
@@ -137,7 +136,7 @@ export const TransactionFormScreen = () => {
           <MaterialCommunityIcons name="close" size={28} color={colors.onSurface} />
         </TouchableOpacity>
         <Text variant="headlineSm" style={styles.headerTitle}>
-          {mode === 'edit' ? 'Ubah Transaksi' : 'Tambah Transaksi'}
+          {mode === 'edit' ? 'Edit Transaction' : 'New Transaction'}
         </Text>
         <View style={{ width: 28 }} />
       </View>
@@ -152,7 +151,7 @@ export const TransactionFormScreen = () => {
             ]}
             onPress={() => handleTypeChange('expense')}
           >
-            <Text style={{ color: type === 'expense' ? colors.onError : colors.onSurfaceVariant }}>Pengeluaran</Text>
+            <Text style={{ color: type === 'expense' ? colors.onError : colors.onSurfaceVariant }}>Expense</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={[
@@ -161,13 +160,13 @@ export const TransactionFormScreen = () => {
             ]}
             onPress={() => handleTypeChange('income')}
           >
-            <Text style={{ color: type === 'income' ? colors.onPrimary : colors.onSurfaceVariant }}>Pemasukan</Text>
+            <Text style={{ color: type === 'income' ? colors.onPrimary : colors.onSurfaceVariant }}>Income</Text>
           </TouchableOpacity>
         </View>
 
         {/* Amount Input */}
         <View style={styles.amountContainer}>
-          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>JUMLAH</Text>
+          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>AMOUNT</Text>
           <View style={styles.amountInputRow}>
             <Text variant="headlineMd" style={{ color: colors.onSurface }}>Rp</Text>
             <Input 
@@ -187,9 +186,9 @@ export const TransactionFormScreen = () => {
           onPress={() => setShowCategoryPicker(true)}
         >
           <View style={{ flex: 1 }}>
-            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>KATEGORI</Text>
+            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>CATEGORY</Text>
             <Text variant="bodyLg" style={{ color: category ? colors.onSurface : colors.outline }}>
-              {category ? category.name : 'Pilih Kategori'}
+              {category ? category.name : 'Select Category'}
             </Text>
           </View>
           <MaterialCommunityIcons name="chevron-right" size={24} color={colors.outline} />
@@ -204,9 +203,9 @@ export const TransactionFormScreen = () => {
           onPress={() => setShowDatePicker(true)}
         >
           <View style={{ flex: 1 }}>
-            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>TANGGAL</Text>
+            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>DATE</Text>
             <Text variant="bodyLg">
-              {format(date, 'EEEE, d MMMM yyyy', { locale: localeId })}
+              {format(date, 'EEEE, MMMM d, yyyy')}
             </Text>
           </View>
           <MaterialCommunityIcons name="calendar" size={24} color={colors.outline} />
@@ -214,10 +213,10 @@ export const TransactionFormScreen = () => {
 
         {/* Note Input */}
         <Input 
-          label="CATATAN"
+          label="NOTE"
           value={description}
           onChangeText={setDescription}
-          placeholder="Tambahkan catatan (opsional)"
+          placeholder="Add a note (optional)"
           multiline
           numberOfLines={3}
           maxLength={200}
@@ -225,14 +224,14 @@ export const TransactionFormScreen = () => {
 
         <View style={{ marginTop: spacing.xl }}>
           <Button 
-            title="Simpan Transaksi" 
+            title="Save Transaction" 
             onPress={handleSave} 
             loading={isSaving}
           />
           
           {mode === 'edit' && (
             <Button 
-              title="Hapus Transaksi" 
+              title="Delete Transaction" 
               onPress={() => setShowDeleteConfirm(true)} 
               variant="error"
               style={{ marginTop: spacing.md }}
@@ -264,13 +263,14 @@ export const TransactionFormScreen = () => {
 
       <ConfirmModal 
         visible={showDeleteConfirm}
-        title="Hapus Transaksi"
-        message="Apakah Anda yakin ingin menghapus transaksi ini?"
-        confirmLabel="Hapus"
+        title="Delete Transaction"
+        message="Are you sure you want to delete this transaction?"
+        confirmLabel="Delete"
         onConfirm={handleDelete}
         onCancel={() => setShowDeleteConfirm(false)}
         isDestructive
       />
+
     </KeyboardAvoidingView>
   );
 };

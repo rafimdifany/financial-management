@@ -119,7 +119,7 @@ export const CategoryPicker: React.FC<Props> = ({
               <View style={[styles.handle, { backgroundColor: colors.outlineVariant }]} />
               
               <View style={styles.header}>
-                <Text variant="titleLg">Pilih Kategori</Text>
+                <Text variant="titleLg">Select Category</Text>
               </View>
 
               <FlatList
