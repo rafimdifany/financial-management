@@ -241,9 +241,10 @@ export const TransactionListScreen = () => {
           ListEmptyComponent={
             !isLoading ? (
               <EmptyState 
-                title={searchQuery ? "No results found" : "No transactions yet"} 
-                message={searchQuery ? `No transactions found for "${searchQuery}"` : "Start tracking your income and expenses today."}
-                icon={searchQuery ? "search-outline" : "swap-vertical-outline"}
+                title={searchQuery ? "No Echoes Found" : "Quiet as a Sanctuary"} 
+                message={searchQuery ? `We couldn't find any transactions matching your search. Try a different keyword.` : "Your transaction history is clear. Begin your financial journey by adding your first entry."}
+                icon={searchQuery ? "search-outline" : "leaf-outline"}
+                style={{ marginTop: spacing.xxl }}
               />
             ) : null
           }
