@@ -166,7 +166,7 @@ export const TransactionFormScreen = () => {
 
         {/* Amount Input */}
         <View style={styles.amountContainer}>
-          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '600', letterSpacing: 0.1 }}>Amount</Text>
+          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '500', letterSpacing: 0.1 }}>AMOUNT</Text>
           <View style={styles.amountInputRow}>
             <Text variant="headlineMd" style={{ color: colors.onSurface }}>Rp</Text>
             <Input 
@@ -189,7 +189,7 @@ export const TransactionFormScreen = () => {
           onPress={() => setShowCategoryPicker(true)}
         >
           <View style={{ flex: 1 }}>
-            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '600', letterSpacing: 0.1 }}>Category</Text>
+            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '500', letterSpacing: 0.1 }}>CATEGORY</Text>
             <Text variant="bodyLg" style={{ color: category ? colors.onSurface : colors.outline }}>
               {category ? category.name : 'Select Category'}
             </Text>
@@ -209,7 +209,7 @@ export const TransactionFormScreen = () => {
           onPress={() => setShowDatePicker(true)}
         >
           <View style={{ flex: 1 }}>
-            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '600', letterSpacing: 0.1 }}>Date</Text>
+            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '500', letterSpacing: 0.1 }}>DATE</Text>
             <Text variant="bodyLg">
               {format(date, 'EEEE, MMMM d, yyyy')}
             </Text>
@@ -220,7 +220,7 @@ export const TransactionFormScreen = () => {
         {/* Note Input */}
         <View style={{ marginTop: spacing.xl }}>
           <Input 
-            label="Note"
+            label="NOTE"
             value={description}
             onChangeText={setDescription}
             placeholder="Add a note (optional)"
