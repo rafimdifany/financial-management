@@ -84,7 +84,7 @@ export const BudgetProgress = () => {
   return (
     <View style={styles.container}>
       <View style={{ marginBottom: spacing.base }}>
-        <SectionHeader title="Budget" caption="Pantau kategori yang mulai mendekati batas." />
+        <SectionHeader title="Category Budgets" caption="Track categories that are approaching their limits." />
       </View>
       {budgetProgress.length > 0 ? (
         <FlatList
@@ -99,7 +99,7 @@ export const BudgetProgress = () => {
         />
       ) : (
         <Surface level={1} style={{ padding: spacing.xl, borderRadius: radius.xl, alignItems: 'center' }}>
-          <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>Belum ada anggaran bulanan</Text>
+          <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>No monthly budgets found</Text>
         </Surface>
       )}
     </View>
