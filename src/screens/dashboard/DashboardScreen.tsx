@@ -2,7 +2,6 @@ import React, { useCallback, useState, useEffect } from "react";
 import { ScrollView, StyleSheet, RefreshControl, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { format } from "date-fns";
-import { id } from "date-fns/locale";
 import { Text } from "../../components/common/Text";
 import { useTheme } from "../../hooks/useTheme";
 import { BalanceCard } from "../../components/dashboard/BalanceCard";
@@ -69,12 +68,12 @@ export const DashboardScreen = () => {
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) setGreeting("Selamat pagi");
-    else if (hour >= 12 && hour < 17) setGreeting("Selamat siang");
-    else if (hour >= 17 && hour < 21) setGreeting("Selamat sore");
-    else setGreeting("Selamat malam");
+    if (hour >= 5 && hour < 12) setGreeting("Good morning");
+    else if (hour >= 12 && hour < 17) setGreeting("Good afternoon");
+    else if (hour >= 17 && hour < 21) setGreeting("Good evening");
+    else setGreeting("Good night");
 
-    setCurrentDate(format(new Date(), "MMMM yyyy", { locale: id }));
+    setCurrentDate(format(new Date(), "EEEE, d MMMM yyyy"));
   }, []);
 
   useFocusEffect(
