@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { TransactionWithCategory, CreateTransaction, UpdateTransaction } from '../types/transaction';
 import { transactionService } from '../services/transactionService';
+import { format } from 'date-fns';
 
 interface TransactionState {
   transactions: TransactionWithCategory[];
@@ -8,6 +9,7 @@ interface TransactionState {
   isRefreshing: boolean;
   filter: 'all' | 'income' | 'expense';
   searchQuery: string;
+  selectedMonth: string; // YYYY-MM
   page: number;
   hasMore: boolean;
   summary: { income: number; expense: number; balance: number };
@@ -18,6 +20,7 @@ interface TransactionState {
   loadMore: () => Promise<void>;
   setFilter: (filter: 'all' | 'income' | 'expense') => void;
   setSearchQuery: (query: string) => void;
+  setSelectedMonth: (month: string) => void;
   
   // CRUD Actions
   addTransaction: (tx: CreateTransaction) => Promise<void>;
@@ -34,12 +37,13 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   isRefreshing: false,
   filter: 'all',
   searchQuery: '',
+  selectedMonth: format(new Date(), 'yyyy-MM'),
   page: 1,
   hasMore: true,
   summary: { income: 0, expense: 0, balance: 0 },
 
   fetchTransactions: async (refresh = false) => {
-    const { filter, searchQuery } = get();
+    const { filter, searchQuery, selectedMonth } = get();
     
     if (refresh) {
       set({ isRefreshing: true });
@@ -58,7 +62,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
           hasMore: data.length === PAGE_SIZE 
         });
       } else {
-        data = await transactionService.getTransactions(filter, 1, PAGE_SIZE);
+        data = await transactionService.getTransactions(filter, 1, PAGE_SIZE, selectedMonth);
         set({ 
           transactions: data, 
           page: 1, 
@@ -77,7 +81,8 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
 
   fetchSummary: async () => {
     try {
-      const summary = await transactionService.getMonthlySummary();
+      const { selectedMonth } = get();
+      const summary = await transactionService.getMonthlySummary(selectedMonth);
       set({ summary });
     } catch (error) {
       console.error('Error fetching summary:', error);
@@ -85,7 +90,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   },
 
   loadMore: async () => {
-    const { filter, page, hasMore, isLoading, transactions, searchQuery } = get();
+    const { filter, page, hasMore, isLoading, transactions, searchQuery, selectedMonth } = get();
     
     if (isLoading || !hasMore) return;
 
@@ -97,7 +102,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       if (searchQuery.trim()) {
         newData = await transactionService.searchTransactions(searchQuery, nextPage, PAGE_SIZE);
       } else {
-        newData = await transactionService.getTransactions(filter, nextPage, PAGE_SIZE);
+        newData = await transactionService.getTransactions(filter, nextPage, PAGE_SIZE, selectedMonth);
       }
       
       set({
@@ -119,6 +124,11 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
 
   setSearchQuery: (searchQuery) => {
     set({ searchQuery, page: 1 });
+    get().fetchTransactions();
+  },
+
+  setSelectedMonth: (selectedMonth) => {
+    set({ selectedMonth, page: 1, hasMore: true });
     get().fetchTransactions();
   },
 
@@ -168,9 +178,11 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       isRefreshing: false,
       filter: 'all',
       searchQuery: '',
+      selectedMonth: format(new Date(), 'yyyy-MM'),
       page: 1,
       hasMore: true,
       summary: { income: 0, expense: 0, balance: 0 },
     });
   },
 }));
+

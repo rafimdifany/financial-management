@@ -47,7 +47,9 @@ export const TransactionListScreen = () => {
     hasMore,
     deleteTransaction,
     setSearchQuery,
-    searchQuery
+    searchQuery,
+    selectedMonth,
+    setSelectedMonth
   } = useTransactionStore();
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -192,10 +194,11 @@ export const TransactionListScreen = () => {
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <View style={[styles.monthRow, { gap: spacing.sm }]}>
                     {MONTH_OPTIONS.map((month) => {
-                      const active = month.isCurrent;
+                      const active = selectedMonth === month.value;
                       return (
                         <TouchableOpacity
                           key={month.value}
+                          onPress={() => setSelectedMonth(month.value)}
                           style={[
                             styles.monthChip,
                             {

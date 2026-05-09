@@ -7,16 +7,22 @@ import {
 } from "../../types/transaction";
 
 export const transactionRepository = {
-  async getAll(limit: number = 20, offset: number = 0): Promise<TransactionWithCategory[]> {
+  async getAll(limit: number = 20, offset: number = 0, month?: string): Promise<TransactionWithCategory[]> {
     const db = await getDatabase();
-    return await db.getAllAsync<TransactionWithCategory>(
-      `SELECT t.*, c.name as category_name, c.icon as category_icon, c.color as category_color 
-       FROM transactions t 
-       LEFT JOIN categories c ON t.category_id = c.id 
-       ORDER BY t.date DESC, t.id DESC 
-       LIMIT ? OFFSET ?`,
-      [limit, offset]
-    );
+    let query = `SELECT t.*, c.name as category_name, c.icon as category_icon, c.color as category_color 
+                 FROM transactions t 
+                 LEFT JOIN categories c ON t.category_id = c.id `;
+    const params: any[] = [];
+
+    if (month) {
+      query += " WHERE t.date LIKE ? ";
+      params.push(`${month}%`);
+    }
+
+    query += " ORDER BY t.date DESC, t.id DESC LIMIT ? OFFSET ? ";
+    params.push(limit, offset);
+
+    return await db.getAllAsync<TransactionWithCategory>(query, params);
   },
 
   async getById(id: number): Promise<TransactionWithCategory | null> {
@@ -42,17 +48,23 @@ export const transactionRepository = {
     );
   },
 
-  async getByType(type: TransactionType, limit: number = 20, offset: number = 0): Promise<TransactionWithCategory[]> {
+  async getByType(type: TransactionType, limit: number = 20, offset: number = 0, month?: string): Promise<TransactionWithCategory[]> {
     const db = await getDatabase();
-    return await db.getAllAsync<TransactionWithCategory>(
-      `SELECT t.*, c.name as category_name, c.icon as category_icon, c.color as category_color 
-       FROM transactions t 
-       LEFT JOIN categories c ON t.category_id = c.id 
-       WHERE t.type = ? 
-       ORDER BY t.date DESC, t.id DESC 
-       LIMIT ? OFFSET ?`,
-      [type, limit, offset]
-    );
+    let query = `SELECT t.*, c.name as category_name, c.icon as category_icon, c.color as category_color 
+                 FROM transactions t 
+                 LEFT JOIN categories c ON t.category_id = c.id 
+                 WHERE t.type = ? `;
+    const params: any[] = [type];
+
+    if (month) {
+      query += " AND t.date LIKE ? ";
+      params.push(`${month}%`);
+    }
+
+    query += " ORDER BY t.date DESC, t.id DESC LIMIT ? OFFSET ? ";
+    params.push(limit, offset);
+
+    return await db.getAllAsync<TransactionWithCategory>(query, params);
   },
 
   async getByCategory(categoryId: number): Promise<TransactionWithCategory[]> {
@@ -160,12 +172,19 @@ export const transactionRepository = {
     const result = await db.getFirstAsync<{ total: number }>(query, params);
     return result?.total || 0;
   },
-  async getMonthlySummary(): Promise<{ income: number; expense: number; balance: number }> {
+
+  async getMonthlySummary(month?: string): Promise<{ income: number; expense: number; balance: number }> {
     const db = await getDatabase();
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const currentMonth = `${year}-${month}%`;
+    let currentMonthPattern: string;
+
+    if (month) {
+      currentMonthPattern = `${month}%`;
+    } else {
+      const now = new Date();
+      const year = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      currentMonthPattern = `${year}-${m}%`;
+    }
 
     const result = await db.getFirstAsync<{ income: number; expense: number }>(
       `SELECT 
@@ -173,7 +192,7 @@ export const transactionRepository = {
         SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense
        FROM transactions 
        WHERE date LIKE ?`,
-      [currentMonth]
+      [currentMonthPattern]
     );
 
     const income = result?.income || 0;
