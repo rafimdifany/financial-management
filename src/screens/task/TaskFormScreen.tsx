@@ -104,13 +104,13 @@ export const TaskFormScreen = () => {
       <ScrollView contentContainerStyle={[styles.content, { padding: spacing.lg }]}>
         {isEdit && (
           <View style={styles.statusSection}>
-            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8 }}>CURRENT STATUS</Text>
+            <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 12, fontWeight: '600', letterSpacing: 0.1 }}>Current Status</Text>
             <StatusBadge status={status} />
           </View>
         )}
 
         <Input
-          label="TASK TITLE"
+          label="Task Title"
           value={title}
           onChangeText={(val) => {
             setTitle(val);
@@ -122,7 +122,7 @@ export const TaskFormScreen = () => {
         />
 
         <View style={styles.section}>
-          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 12 }}>PRIORITY</Text>
+          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 16, fontWeight: '600', letterSpacing: 0.1 }}>Priority</Text>
           <View style={styles.priorityRow}>
             {(['low', 'medium', 'high'] as TaskPriority[]).map((p) => (
               <Chip
@@ -137,7 +137,7 @@ export const TaskFormScreen = () => {
         </View>
 
         <View style={styles.section}>
-          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 4 }}>DUE DATE (Optional)</Text>
+          <Text variant="labelMd" style={{ color: colors.onSurfaceVariant, marginBottom: 8, fontWeight: '600', letterSpacing: 0.1 }}>Due Date (Optional)</Text>
           <TouchableOpacity 
             style={[styles.dateTrigger, { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md }]}
             onPress={() => setShowDatePicker(true)}
