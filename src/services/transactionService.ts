@@ -2,13 +2,13 @@ import { transactionRepository } from '../database/repositories/transactionRepos
 import { CreateTransaction, UpdateTransaction, TransactionType } from '../types/transaction';
 
 export const transactionService = {
-  async getTransactions(filter: 'all' | 'income' | 'expense', page: number, pageSize = 20) {
+  async getTransactions(filter: 'all' | 'income' | 'expense', page: number, pageSize = 20, month?: string) {
     const offset = (page - 1) * pageSize;
     
     if (filter === 'all') {
-      return await transactionRepository.getAll(pageSize, offset);
+      return await transactionRepository.getAll(pageSize, offset, month);
     } else {
-      return await transactionRepository.getByType(filter as TransactionType, pageSize, offset);
+      return await transactionRepository.getByType(filter as TransactionType, pageSize, offset, month);
     }
   },
 
@@ -41,7 +41,7 @@ export const transactionService = {
     return await transactionRepository.count(repoType);
   },
 
-  async getMonthlySummary() {
-    return await transactionRepository.getMonthlySummary();
+  async getMonthlySummary(month?: string) {
+    return await transactionRepository.getMonthlySummary(month);
   }
 };
