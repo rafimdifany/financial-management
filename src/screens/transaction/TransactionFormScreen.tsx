@@ -182,7 +182,10 @@ export const TransactionFormScreen = () => {
 
         {/* Category Picker Trigger */}
         <TouchableOpacity 
-          style={styles.fieldTrigger}
+          style={[
+            styles.fieldTrigger, 
+            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg, marginBottom: spacing.md }
+          ]}
           onPress={() => setShowCategoryPicker(true)}
         >
           <View style={{ flex: 1 }}>
@@ -194,12 +197,15 @@ export const TransactionFormScreen = () => {
           <MaterialCommunityIcons name="chevron-right" size={24} color={colors.outline} />
         </TouchableOpacity>
         {errors.category && (
-          <Text variant="labelSm" style={{ color: colors.error, marginTop: -12, marginBottom: 12 }}>{errors.category}</Text>
+          <Text variant="labelSm" style={{ color: colors.error, marginBottom: spacing.md, marginLeft: spacing.base }}>{errors.category}</Text>
         )}
 
         {/* Date Picker Trigger */}
         <TouchableOpacity 
-          style={styles.fieldTrigger}
+          style={[
+            styles.fieldTrigger, 
+            { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md, padding: spacing.lg, marginBottom: spacing.md }
+          ]}
           onPress={() => setShowDatePicker(true)}
         >
           <View style={{ flex: 1 }}>
@@ -212,15 +218,17 @@ export const TransactionFormScreen = () => {
         </TouchableOpacity>
 
         {/* Note Input */}
-        <Input 
-          label="NOTE"
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Add a note (optional)"
-          multiline
-          numberOfLines={3}
-          maxLength={200}
-        />
+        <View style={{ marginTop: spacing.xl }}>
+          <Input 
+            label="NOTE"
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Add a note (optional)"
+            multiline
+            numberOfLines={3}
+            maxLength={200}
+          />
+        </View>
 
         <View style={{ marginTop: spacing.xl }}>
           <Button 
@@ -317,9 +325,5 @@ const styles = StyleSheet.create({
   fieldTrigger: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
-    marginBottom: 24,
   },
 });
