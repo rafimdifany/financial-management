@@ -1,5 +1,5 @@
 import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { transactionRepository } from '../database/repositories/transactionRepository';
 import { taskRepository } from '../database/repositories/taskRepository';
 import { categoryRepository } from '../database/repositories/categoryRepository';
