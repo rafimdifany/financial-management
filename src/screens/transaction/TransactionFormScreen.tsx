@@ -148,20 +148,26 @@ export const TransactionFormScreen = () => {
           <TouchableOpacity 
             style={[
               styles.typeButton, 
-              type === 'expense' && { backgroundColor: colors.error, borderRadius: radius.full }
+              type === 'expense' && { backgroundColor: colors.errorContainer, borderRadius: radius.full }
             ]}
             onPress={() => handleTypeChange('expense')}
           >
-            <Text style={{ color: type === 'expense' ? colors.onError : colors.onSurfaceVariant }}>Expense</Text>
+            <Text style={{ 
+              color: type === 'expense' ? colors.error : colors.onSurfaceVariant,
+              fontWeight: '600'
+            }}>Expense</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={[
               styles.typeButton, 
-              type === 'income' && { backgroundColor: colors.primary, borderRadius: radius.full }
+              type === 'income' && { backgroundColor: colors.primaryContainer, borderRadius: radius.full }
             ]}
             onPress={() => handleTypeChange('income')}
           >
-            <Text style={{ color: type === 'income' ? colors.onPrimary : colors.onSurfaceVariant }}>Income</Text>
+            <Text style={{ 
+              color: type === 'income' ? colors.primary : colors.onSurfaceVariant,
+              fontWeight: '600'
+            }}>Income</Text>
           </TouchableOpacity>
         </View>
 
