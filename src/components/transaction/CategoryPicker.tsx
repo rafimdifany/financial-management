@@ -55,7 +55,10 @@ export const CategoryPicker: React.FC<Props> = ({
 
     return (
       <TouchableOpacity 
-        style={styles.categoryItem}
+        style={[
+          styles.categoryItem,
+          isSelected && { backgroundColor: colors.surfaceContainerHigh, borderRadius: radius.md }
+        ]}
         onPress={() => {
           onSelect(item);
           onClose();
@@ -65,21 +68,27 @@ export const CategoryPicker: React.FC<Props> = ({
           styles.iconContainer,
           { 
             borderRadius: radius.full,
-            backgroundColor: isSelected ? `${colors.primary}22` : 'transparent',
-            padding: isSelected ? 4 : 0,
+            backgroundColor: `${item.color}26`, // 15% opacity
+            width: 44,
+            height: 44,
+            justifyContent: 'center',
+            alignItems: 'center',
           }
         ]}>
           <CategoryIcon 
             icon={item.icon} 
             color={item.color} 
-            size={28}
+            size={24}
           />
         </View>
         <Text 
           variant="labelMd" 
           style={[
             styles.categoryName,
-            { color: isSelected ? colors.primary : colors.onSurface }
+            { 
+              color: colors.onSurface,
+              fontWeight: isSelected ? '600' : '400'
+            }
           ]}
           numberOfLines={1}
         >
@@ -109,16 +118,16 @@ export const CategoryPicker: React.FC<Props> = ({
               style={[
                 styles.content, 
                 { 
-                  backgroundColor: colors.surface,
+                  backgroundColor: colors.surfaceContainerLow,
                   borderTopLeftRadius: radius.xl,
                   borderTopRightRadius: radius.xl,
                   paddingBottom: insets.bottom + spacing.lg
                 }
               ]}
             >
-              <View style={[styles.handle, { backgroundColor: colors.outlineVariant }]} />
+              <View style={[styles.handle, { backgroundColor: colors.outlineVariant, marginTop: spacing.sm, marginBottom: spacing.xl }]} />
               
-              <View style={styles.header}>
+              <View style={[styles.header, { marginBottom: spacing.xl, paddingHorizontal: spacing.xl }]}>
                 <Text variant="titleLg">Select Category</Text>
               </View>
 
@@ -127,7 +136,7 @@ export const CategoryPicker: React.FC<Props> = ({
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
                 numColumns={3}
-                contentContainerStyle={styles.listContent}
+                contentContainerStyle={[styles.listContent, { paddingHorizontal: spacing.md, paddingBottom: spacing.xl }]}
                 showsVerticalScrollIndicator={false}
               />
             </Animated.View>
@@ -146,27 +155,22 @@ const styles = StyleSheet.create({
   content: {
     maxHeight: SCREEN_HEIGHT * 0.7,
     width: '100%',
-    paddingTop: 12,
   },
   handle: {
-    width: 40,
+    width: 48,
     height: 4,
     borderRadius: 2,
     alignSelf: 'center',
-    marginBottom: 20,
   },
   header: {
-    paddingHorizontal: 24,
-    marginBottom: 20,
   },
   listContent: {
-    paddingHorizontal: 12,
-    paddingBottom: 24,
   },
   categoryItem: {
     flex: 1,
     alignItems: 'center',
     marginBottom: 20,
+    paddingVertical: 12,
     paddingHorizontal: 4,
   },
   iconContainer: {
