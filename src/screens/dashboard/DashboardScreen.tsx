@@ -102,7 +102,7 @@ export const DashboardScreen = () => {
         contentContainerStyle={[
           styles.content, 
           { 
-            paddingTop: insets.top + spacing.xl,
+            paddingTop: insets.top + spacing.base,
             paddingBottom: 132 
           }
         ]}
