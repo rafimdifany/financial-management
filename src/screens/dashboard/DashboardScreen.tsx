@@ -20,11 +20,13 @@ const DashboardMetric = ({
   label,
   value,
   tone,
+  growth,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
   tone: string;
+  growth?: string;
 }) => {
   const { colors, spacing, radius } = useTheme();
 
@@ -39,8 +41,15 @@ const DashboardMetric = ({
         },
       ]}
     >
-      <View style={[styles.metricIcon, { backgroundColor: `${tone}18`, borderRadius: radius.md }]}>
-        <Ionicons name={icon} size={16} color={tone} />
+      <View style={styles.metricHeader}>
+        <View style={[styles.metricIcon, { backgroundColor: `${tone}18`, borderRadius: radius.md }]}>
+          <Ionicons name={icon} size={16} color={tone} />
+        </View>
+        {growth && (
+          <View style={[styles.growthPill, { backgroundColor: `${tone}12` }]}>
+            <Text variant="labelSm" style={{ color: tone, fontWeight: '700' }}>{growth}</Text>
+          </View>
+        )}
       </View>
       <Text variant="labelSm" style={{ color: colors.onSurfaceVariant, textTransform: 'uppercase', fontWeight: '800' }}>
         {label}
@@ -122,12 +131,14 @@ export const DashboardScreen = () => {
               label="Income"
               value={formatCurrency(income)}
               tone={colors.secondary}
+              growth="+12%"
             />
             <DashboardMetric
               icon="arrow-up-outline"
               label="Expense"
               value={formatCurrency(expense)}
               tone={colors.error}
+              growth="-5%"
             />
           </View>
 
@@ -158,10 +169,21 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 8,
   },
+  metricHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
   metricIcon: {
     width: 40,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
+  },
+  growthPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
   },
 });

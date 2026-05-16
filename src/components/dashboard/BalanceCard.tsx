@@ -52,17 +52,25 @@ export const BalanceCard = () => {
         style={[
           styles.statusPill,
           {
-            backgroundColor: 'rgba(255,255,255,0.2)',
+            backgroundColor: colors.primaryContainer,
             borderRadius: radius.md,
+            paddingHorizontal: 12,
+            paddingVertical: 6,
           },
         ]}
       >
         <Ionicons
           name={netFlow >= 0 ? "trending-up" : "trending-down"}
           size={14}
-          color={colors.onPrimary}
+          color={colors.onPrimaryContainer}
         />
-        <Text variant="labelSm" style={{ color: colors.onPrimary }}>
+        <Text 
+          variant="labelSm" 
+          style={{ 
+            color: colors.onPrimaryContainer,
+            fontWeight: '700'
+          }}
+        >
           {netFlow >= 0 ? "Surplus bulan ini" : "Defisit bulan ini"}
         </Text>
       </View>
