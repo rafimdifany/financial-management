@@ -5,11 +5,11 @@ import { Typography } from '../../constants/typography';
 import { Ionicons } from '@expo/vector-icons';
 
 export const ThemeSwitcher = () => {
-  const { theme, setTheme, colors, radius, spacing } = useTheme();
+  const { theme, setTheme, colors, radius } = useTheme();
 
   const options = [
-    { id: 'light', label: 'Light', icon: 'sunny-outline' },
-    { id: 'dark', label: 'Dark', icon: 'moon-outline' },
+    { id: 'light', icon: 'sunny' },
+    { id: 'dark', icon: 'moon' },
   ] as const;
 
   return (
@@ -22,23 +22,23 @@ export const ThemeSwitcher = () => {
             onPress={() => setTheme(option.id)}
             style={[
               styles.option,
-              isSelected && { backgroundColor: colors.primary, borderRadius: radius.full }
+              isSelected && { 
+                backgroundColor: colors.primary, 
+                borderRadius: radius.full,
+                // Add subtle shadow for selected state
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.1,
+                shadowRadius: 2,
+                elevation: 2
+              }
             ]}
           >
             <Ionicons 
-              name={option.icon} 
+              name={isSelected ? (option.icon as any) : (`${option.icon}-outline` as any)} 
               size={18} 
               color={isSelected ? colors.onPrimary : colors.onSurfaceVariant} 
-              style={{ marginRight: 8 }}
             />
-            <Text 
-              style={[
-                styles.label, 
-                { color: isSelected ? colors.onPrimary : colors.onSurfaceVariant }
-              ]}
-            >
-              {option.label}
-            </Text>
           </TouchableOpacity>
         );
       })}
@@ -50,16 +50,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     padding: 4,
-    height: 48,
+    height: 36,
+    width: 80,
   },
   option: {
     flex: 1,
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: Typography.fontFamily.medium,
   },
 });
