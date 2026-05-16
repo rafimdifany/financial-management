@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { ScrollView, StyleSheet, RefreshControl, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { format } from "date-fns";
 import { Text } from "../../components/common/Text";
 import { useTheme } from "../../hooks/useTheme";
@@ -12,7 +13,6 @@ import { PendingTasks } from "../../components/dashboard/PendingTasks";
 import { useDashboardStore } from "../../stores/useDashboardStore";
 import { Surface } from "../../components/common/Surface";
 import { Ionicons } from "@expo/vector-icons";
-import { AppTopBar } from "../../components/common/AppTopBar";
 import { formatCurrency } from "../../utils/formatCurrency";
 
 const DashboardMetric = ({
@@ -63,6 +63,7 @@ const DashboardMetric = ({
 
 export const DashboardScreen = () => {
   const { colors, spacing } = useTheme();
+  const insets = useSafeAreaInsets();
   const { fetchAll, isLoading, income, expense } = useDashboardStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -93,7 +94,6 @@ export const DashboardScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <AppTopBar />
       <ScrollView 
         style={styles.container}
         keyboardDismissMode="on-drag"
@@ -101,7 +101,10 @@ export const DashboardScreen = () => {
         contentInsetAdjustmentBehavior="never"
         contentContainerStyle={[
           styles.content, 
-          { paddingBottom: 132 }
+          { 
+            paddingTop: insets.top + spacing.xl,
+            paddingBottom: 132 
+          }
         ]}
         showsVerticalScrollIndicator={false}
         refreshControl={

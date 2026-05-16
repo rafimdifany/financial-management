@@ -11,7 +11,6 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { ConfirmModal } from '../../components/common/ConfirmModal';
 import { Pressable } from 'react-native';
 import { Text } from '../../components/common/Text';
-import { AppTopBar } from '../../components/common/AppTopBar';
 import { Surface } from '../../components/common/Surface';
 import { ProgressBar } from '../../components/common/ProgressBar';
 import { FloatingActionButton } from '../../components/common/FloatingActionButton';
@@ -109,8 +108,6 @@ export const TaskListScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <AppTopBar />
-
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id.toString()}
@@ -129,7 +126,7 @@ export const TaskListScreen = () => {
           styles.listContent, 
           { 
             paddingHorizontal: spacing.xl, 
-            paddingTop: spacing.xl,
+            paddingTop: insets.top + spacing.xl,
             paddingBottom: insets.bottom + 104
           }
         ]}

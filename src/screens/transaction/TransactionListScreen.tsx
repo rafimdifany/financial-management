@@ -16,7 +16,6 @@ import { TransactionItem } from '../../components/transaction/TransactionItem';
 import { TransactionSummary } from '../../components/transaction/TransactionSummary';
 import { TransactionGroupHeader } from '../../components/transaction/TransactionGroup';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { AppTopBar } from '../../components/common/AppTopBar';
 import { FloatingActionButton } from '../../components/common/FloatingActionButton';
 
 import { format, subMonths, startOfMonth } from 'date-fns';
@@ -157,9 +156,8 @@ export const TransactionListScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: colors.surface }]}>
-        <AppTopBar />
         {isSearchVisible ? (
-          <View style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.base }}>
+          <View style={{ paddingHorizontal: spacing.xl, paddingTop: insets.top + spacing.base }}>
             <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.searchContainer}>
               <Input 
                 autoFocus
@@ -188,6 +186,7 @@ export const TransactionListScreen = () => {
             styles.listContent, 
             { 
               paddingHorizontal: spacing.lg,
+              paddingTop: insets.top + spacing.xl,
               paddingBottom: insets.bottom + 104
             }
           ]}
