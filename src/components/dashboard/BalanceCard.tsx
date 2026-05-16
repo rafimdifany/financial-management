@@ -30,20 +30,20 @@ export const BalanceCard = () => {
         },
       ]}
     >
-      <View style={[styles.header, { marginBottom: spacing.xl }]}>
+      <View style={[styles.header, { marginBottom: spacing.xs }]}>
         <View>
           <Text variant="labelSm" style={[styles.eyebrow, { color: colors.onPrimary }]}>
             TOTAL BALANCE
           </Text>
         </View>
       </View>
-      
+
       <Text 
         variant="displayMd"
         numberOfLines={1}
         adjustsFontSizeToFit
         minimumFontScale={0.72}
-        style={[styles.balance, { color: colors.onPrimary, marginBottom: spacing.xl }]}
+        style={[styles.balance, { color: colors.onPrimary, marginBottom: spacing.lg }]}
       >
         {formatCurrency(balance)}
       </Text>
