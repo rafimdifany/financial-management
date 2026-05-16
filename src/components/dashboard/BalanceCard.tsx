@@ -17,22 +17,22 @@ export const BalanceCard = () => {
       style={[
         styles.container,
         {
-          backgroundColor: colors.surfaceContainerLowest,
+          backgroundColor: colors.primary,
           borderRadius: radius.xl,
           padding: spacing["2xl"],
           borderWidth: 0,
           // Add ambient shadow as per spec §6.4
-          shadowColor: colors.onSurface,
+          shadowColor: colors.primary,
           shadowOffset: { width: 0, height: 16 },
-          shadowOpacity: 0.04,
-          shadowRadius: 32,
-          elevation: 4,
+          shadowOpacity: 0.2,
+          shadowRadius: 24,
+          elevation: 8,
         },
       ]}
     >
       <View style={[styles.header, { marginBottom: spacing.xl }]}>
         <View>
-          <Text variant="labelSm" style={[styles.eyebrow, { color: colors.onSurfaceVariant }]}>
+          <Text variant="labelSm" style={[styles.eyebrow, { color: colors.onPrimary }]}>
             TOTAL BALANCE
           </Text>
         </View>
@@ -43,7 +43,7 @@ export const BalanceCard = () => {
         numberOfLines={1}
         adjustsFontSizeToFit
         minimumFontScale={0.72}
-        style={[styles.balance, { color: colors.onSurface, marginBottom: spacing.xl }]}
+        style={[styles.balance, { color: colors.onPrimary, marginBottom: spacing.xl }]}
       >
         {formatCurrency(balance)}
       </Text>
@@ -52,7 +52,7 @@ export const BalanceCard = () => {
         style={[
           styles.statusPill,
           {
-            backgroundColor: netFlow >= 0 ? `${colors.secondary}15` : `${colors.error}15`,
+            backgroundColor: 'rgba(255,255,255,0.2)',
             borderRadius: radius.md,
           },
         ]}
@@ -60,9 +60,9 @@ export const BalanceCard = () => {
         <Ionicons
           name={netFlow >= 0 ? "trending-up" : "trending-down"}
           size={14}
-          color={netFlow >= 0 ? colors.secondary : colors.error}
+          color={colors.onPrimary}
         />
-        <Text variant="labelSm" style={{ color: netFlow >= 0 ? colors.secondary : colors.error }}>
+        <Text variant="labelSm" style={{ color: colors.onPrimary }}>
           {netFlow >= 0 ? "Surplus bulan ini" : "Defisit bulan ini"}
         </Text>
       </View>
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   eyebrow: {
-    color: "rgba(255,255,255,0.72)",
     fontWeight: "800",
     textTransform: "uppercase",
   },
