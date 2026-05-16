@@ -111,7 +111,7 @@ export const Button: React.FC<Props> = ({
       style={[
         styles.container,
         {
-          borderRadius: radius.sm,
+          borderRadius: radius.md,
           opacity: disabled ? 0.5 : 1,
         },
         variant !== "primary" && { backgroundColor: variantStyles.backgroundColor },
@@ -129,7 +129,7 @@ export const Button: React.FC<Props> = ({
             { 
               paddingVertical: spacing.md,
               paddingHorizontal: spacing.xl,
-              borderRadius: radius.sm,
+              borderRadius: radius.md,
             }
           ]}
         >
