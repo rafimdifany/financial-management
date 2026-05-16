@@ -52,7 +52,7 @@ export const SettingsScreen = () => {
           paddingBottom: 112 
         }}
       >
-        <View style={[styles.profileHeader, { paddingTop: spacing["3xl"], paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }]}>
+        <View style={[styles.profileHeader, { paddingTop: spacing.base, paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }]}>
           <View style={styles.themeToggleWrapper}>
             <ThemeSwitcher />
           </View>

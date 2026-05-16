@@ -157,7 +157,7 @@ export const TransactionListScreen = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: colors.surface }]}>
         {isSearchVisible ? (
-          <View style={{ paddingHorizontal: spacing.xl, paddingTop: insets.top + spacing.base }}>
+          <View style={{ paddingHorizontal: spacing.xl, paddingTop: insets.top }}>
             <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.searchContainer}>
               <Input 
                 autoFocus
@@ -186,7 +186,7 @@ export const TransactionListScreen = () => {
             styles.listContent, 
             { 
               paddingHorizontal: spacing.lg,
-              paddingTop: insets.top + spacing.xl,
+              paddingTop: insets.top,
               paddingBottom: insets.bottom + 104
             }
           ]}

@@ -126,7 +126,7 @@ export const TaskListScreen = () => {
           styles.listContent, 
           { 
             paddingHorizontal: spacing.xl, 
-            paddingTop: insets.top + spacing.xl,
+            paddingTop: insets.top,
             paddingBottom: insets.bottom + 104
           }
         ]}
