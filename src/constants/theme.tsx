@@ -6,7 +6,7 @@ import { spacing, radius } from "./spacing";
 import { useSettingsStore } from "../stores/useSettingsStore";
 import { useColorScheme } from "react-native";
 
-export type ThemeType = "dark" | "light";
+export type ThemeType = "dark" | "light" | "system";
 
 interface ThemeContextType {
   theme: ThemeType;
@@ -29,12 +29,14 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     fetchSettings();
   }, []);
 
-  const theme: ThemeType = storeTheme === 'system' 
+  const theme: ThemeType = storeTheme as ThemeType;
+  
+  const resolvedTheme = theme === 'system' 
     ? (systemColorScheme || 'dark') 
-    : (storeTheme as ThemeType);
+    : theme;
 
-  const colors = theme === "dark" ? darkColors : lightColors;
-  const isDark = theme === "dark";
+  const colors = resolvedTheme === "dark" ? darkColors : lightColors;
+  const isDark = resolvedTheme === "dark";
 
   const toggleTheme = async () => {
     const newTheme = theme === "dark" ? "light" : "dark";
