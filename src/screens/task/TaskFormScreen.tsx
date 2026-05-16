@@ -8,6 +8,7 @@ import {
   Platform,
   Alert
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Text } from '../../components/common/Text';
@@ -24,6 +25,7 @@ import { format } from 'date-fns';
 
 export const TaskFormScreen = () => {
   const { colors, spacing, radius } = useTheme();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute<any>();
   const { addTask, updateTask, deleteTask } = useTaskStore();
@@ -91,7 +93,7 @@ export const TaskFormScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container, { backgroundColor: colors.surface }]}
     >
-      <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingTop: 60 }]}>
+      <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingTop: insets.top + spacing.md }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="close" size={28} color={colors.onSurface} />
         </TouchableOpacity>
