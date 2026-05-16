@@ -10,6 +10,7 @@ export const ThemeSwitcher = () => {
   const options = [
     { id: 'light', icon: 'sunny' },
     { id: 'dark', icon: 'moon' },
+    { id: 'system', icon: 'phone-portrait' },
   ] as const;
 
   return (
@@ -19,7 +20,7 @@ export const ThemeSwitcher = () => {
         return (
           <TouchableOpacity
             key={option.id}
-            onPress={() => setTheme(option.id)}
+            onPress={() => setTheme(option.id as any)}
             style={[
               styles.option,
               isSelected && { 
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 4,
     height: 36,
-    width: 80,
+    width: 120,
   },
   option: {
     flex: 1,
