@@ -50,31 +50,24 @@ export const SettingsScreen = () => {
         contentContainerStyle={{ paddingBottom: 112 }}
       >
         <View style={[styles.profileHeader, { paddingTop: spacing["3xl"], paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }]}>
-        <View style={[styles.profileAvatarRing, { borderRadius: radius.full, backgroundColor: colors.primary }]}>
-          <View style={[styles.profileAvatar, { borderRadius: radius.full, backgroundColor: colors.primaryContainer }]}>
-            <Text variant="headlineMd" style={{ color: colors.primary }}>R</Text>
+          <View style={styles.themeToggleWrapper}>
+            <ThemeSwitcher />
           </View>
-          <View style={[styles.editBadge, { backgroundColor: colors.primary, borderColor: colors.surface, borderRadius: radius.full }]}>
-            <Ionicons name="pencil" size={12} color={colors.onPrimary} />
+          <View style={[styles.profileAvatarRing, { borderRadius: radius.full, backgroundColor: colors.primary }]}>
+            <View style={[styles.profileAvatar, { borderRadius: radius.full, backgroundColor: colors.primaryContainer, borderColor: colors.surface }]}>
+              <Text variant="headlineMd" style={{ color: colors.primary }}>R</Text>
+            </View>
+            <View style={[styles.editBadge, { backgroundColor: colors.primary, borderColor: colors.surface, borderRadius: radius.full }]}>
+              <Ionicons name="pencil" size={12} color={colors.onPrimary} />
+            </View>
           </View>
+          <Text variant="headlineMd" style={{ color: colors.onSurface, marginTop: spacing.lg }}>
+            Rafi
+          </Text>
+          <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>
+            rafi.sanctuary@finance.io
+          </Text>
         </View>
-        <Text variant="headlineMd" style={{ color: colors.onSurface, marginTop: spacing.lg }}>
-          Rafi
-        </Text>
-        <Text variant="bodyMd" style={{ color: colors.onSurfaceVariant }}>
-          rafi.sanctuary@finance.io
-        </Text>
-      </View>
-
-      {renderSection('VISUALS', 'Appearance', (
-        <>
-          <SettingRow 
-            label="Light Mode" 
-            icon="color-palette-outline"
-            rightElement={<ThemeSwitcher />}
-          />
-        </>
-      ))}
 
       {renderSection('PREFERENCES', 'Localization', (
         <>
@@ -166,6 +159,13 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     alignItems: 'center',
+    position: 'relative',
+  },
+  themeToggleWrapper: {
+    position: 'absolute',
+    top: 24,
+    right: 24,
+    zIndex: 10,
   },
   profileAvatarRing: {
     width: 128,
