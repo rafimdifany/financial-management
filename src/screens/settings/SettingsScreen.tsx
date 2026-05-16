@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../hooks/useTheme';
 import { useSettingsStore } from '../../stores/useSettingsStore';
 import { SettingRow } from '../../components/settings/SettingRow';
@@ -9,11 +10,11 @@ import { useNavigation } from '@react-navigation/native';
 import appJson from '../../../app.json';
 import { Text } from '../../components/common/Text';
 import { Surface } from '../../components/common/Surface';
-import { AppTopBar } from '../../components/common/AppTopBar';
 import { Ionicons } from '@expo/vector-icons';
 
 export const SettingsScreen = () => {
   const { colors, spacing, radius } = useTheme();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { 
     currency, 
@@ -43,13 +44,15 @@ export const SettingsScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.surface }]}>
-      <AppTopBar />
       <ScrollView 
         style={styles.container}
         contentInsetAdjustmentBehavior="never"
-        contentContainerStyle={{ paddingBottom: 112 }}
+        contentContainerStyle={{ 
+          paddingTop: insets.top,
+          paddingBottom: 112 
+        }}
       >
-        <View style={[styles.profileHeader, { paddingTop: spacing["3xl"], paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }]}>
+        <View style={[styles.profileHeader, { paddingTop: spacing.base, paddingHorizontal: spacing.xl, marginBottom: spacing["3xl"] }]}>
           <View style={styles.themeToggleWrapper}>
             <ThemeSwitcher />
           </View>
